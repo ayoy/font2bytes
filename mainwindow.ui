@@ -38,7 +38,11 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="widthLineEdit"/>
+           <widget class="QLineEdit" name="widthLineEdit">
+            <property name="placeholderText">
+             <string>8-255px</string>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="heightLabel_2">
@@ -48,7 +52,11 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="heightLineEdit"/>
+           <widget class="QLineEdit" name="heightLineEdit">
+            <property name="placeholderText">
+             <string>8-255px</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -60,9 +68,9 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QRadioButton" name="radioButton">
+           <widget class="QRadioButton" name="topBottomRadioButton">
             <property name="text">
-             <string>Top-Down</string>
+             <string>Top-Bottom</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -70,7 +78,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="radioButton_2">
+           <widget class="QRadioButton" name="leftRightRadioButton">
             <property name="text">
              <string>Left-Right</string>
             </property>
@@ -86,14 +94,14 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QCheckBox" name="checkBox">
+           <widget class="QCheckBox" name="invertBitsCheckBox">
             <property name="text">
              <string>Invert Bits</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="checkBox_2">
+           <widget class="QCheckBox" name="bitNumberingCheckBox">
             <property name="text">
              <string>Reverse Bits (MSB)</string>
             </property>
@@ -126,7 +134,7 @@
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="promptLabel">
           <property name="text">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;Drop your&lt;br&gt;PNG file here!&lt;/body&gt;&lt;/html&gt;</string>
           </property>
