@@ -4,8 +4,6 @@
 #include <QMainWindow>
 #include "conversionconfig.h"
 
-class QIntValidator;
-
 namespace Ui {
 class MainWindow;
 }

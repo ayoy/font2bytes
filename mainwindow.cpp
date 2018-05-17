@@ -11,9 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->widthLineEdit, SIGNAL(editingFinished()), this, SLOT(validateTextFieldInput()));
     connect(ui->heightLineEdit, SIGNAL(editingFinished()), this, SLOT(validateTextFieldInput()));
 
-    connect(ui->topBottomRadioButton, SIGNAL(toggled(bool)), this, SLOT(updateConfig()));
-    connect(ui->invertBitsCheckBox, SIGNAL(toggled(bool)), this, SLOT(updateConfig()));
-    connect(ui->bitNumberingCheckBox, SIGNAL(toggled(bool)), this, SLOT(updateConfig()));
+    connect(ui->topBottomRadioButton, SIGNAL(clicked(bool)), this, SLOT(updateConfig()));
+    connect(ui->invertBitsCheckBox, SIGNAL(clicked(bool)), this, SLOT(updateConfig()));
+    connect(ui->bitNumberingCheckBox, SIGNAL(clicked(bool)), this, SLOT(updateConfig()));
+
+    config.loadFromSettings();
 }
 
 MainWindow::~MainWindow()
@@ -49,6 +51,7 @@ void MainWindow::updateConfig()
                 ConversionConfig::BitNumbering::MSB :
                 ConversionConfig::BitNumbering::LSB;
 
+    config.saveToSettings();
 }
 
 void MainWindow::validateTextFieldInput()

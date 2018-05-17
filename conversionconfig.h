@@ -1,6 +1,8 @@
 #ifndef CONVERSIONCONFIG_H
 #define CONVERSIONCONFIG_H
 
+#include <cstdint>
+
 struct ConversionConfig
 {
     enum ReadingMode { TopToBottom, LeftToRight };
@@ -11,6 +13,9 @@ struct ConversionConfig
     bool shouldInvertBits = false;
     BitNumbering bitNumbering = LSB;
     ReadingMode readingMode = TopToBottom;
+
+    void loadFromSettings();
+    void saveToSettings() const;
 
     inline bool isHeightValid() const {
         return fontHeight >= 8;
