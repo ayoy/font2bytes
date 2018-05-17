@@ -15,6 +15,21 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QWidget" name="sideBarWidget" native="true">
       <property name="sizePolicy">
@@ -24,6 +39,18 @@
        </sizepolicy>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="leftMargin">
+        <number>24</number>
+       </property>
+       <property name="topMargin">
+        <number>24</number>
+       </property>
+       <property name="rightMargin">
+        <number>24</number>
+       </property>
+       <property name="bottomMargin">
+        <number>24</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="fontSizeGroupBox">
          <property name="title">
@@ -127,22 +154,41 @@
      </widget>
     </item>
     <item>
-     <widget class="QStackedWidget" name="stackedWidget">
+     <widget class="DroppableStackedWidget" name="stackedWidget">
       <property name="minimumSize">
        <size>
         <width>450</width>
         <height>302</height>
        </size>
       </property>
+      <property name="acceptDrops">
+       <bool>true</bool>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
         <item row="0" column="0">
          <widget class="DropLabel" name="promptLabel">
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;Drop your&lt;br&gt;PNG file here!&lt;/body&gt;&lt;/html&gt;</string>
+           <string>Drop your
+PNG file here!</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -180,6 +226,12 @@
    <class>DropLabel</class>
    <extends>QLabel</extends>
    <header>droplabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DroppableStackedWidget</class>
+   <extends>QStackedWidget</extends>
+   <header>droppablestackedwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

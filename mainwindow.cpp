@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->invertBitsCheckBox, SIGNAL(clicked(bool)), this, SLOT(updateConfig()));
     connect(ui->bitNumberingCheckBox, SIGNAL(clicked(bool)), this, SLOT(updateConfig()));
 
+    connect(ui->stackedWidget, SIGNAL(dropActionAvailableChanged(bool)), ui->promptLabel, SLOT(setDropActionAvailable(bool)));
+
     config.loadFromSettings();
 }
 

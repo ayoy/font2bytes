@@ -1,11 +1,30 @@
 #include "droplabel.h"
 #include <QPainter>
+#include <QDebug>
 
 DropLabel::DropLabel(QWidget *parent):
-    QLabel(parent)
+    QLabel(parent),
+    defaultPalette(palette())
 {
+    defaultPalette.setColor(QPalette::WindowText, Qt::gray);
+    setPalette(defaultPalette);
     setFont(QFont("Helvetica", 42, QFont::Black));
-    setStyleSheet("QLabel { color : gray }");
+    updateStyleSheet();
+    setAutoFillBackground(true);
+}
+
+void DropLabel::updateStyleSheet()
+{
+    qDebug() << __PRETTY_FUNCTION__ << m_dropActionAvailable;
+    QPalette palette(this->palette());
+    if (m_dropActionAvailable) {
+        palette.setColor(backgroundRole(), defaultPalette.color(QPalette::Highlight));
+        palette.setColor(foregroundRole(), defaultPalette.color(QPalette::BrightText));
+    } else {
+        palette.setColor(backgroundRole(), defaultPalette.color(QPalette::Window));
+        palette.setColor(foregroundRole(), defaultPalette.color(QPalette::WindowText));
+    }
+    setPalette(palette);
 }
 
 void DropLabel::paintEvent(QPaintEvent *event)
@@ -39,5 +58,5 @@ void DropLabel::paintEvent(QPaintEvent *event)
     stroker.setDashPattern(QVector<qreal>() << 1 << 2);
     stroker.setWidth(8);
 
-    painter.fillPath(stroker.createStroke(path), Qt::gray);
+    painter.fillPath(stroker.createStroke(path), palette().color(foregroundRole()));
 }
