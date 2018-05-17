@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>507</width>
-    <height>375</height>
+    <width>865</width>
+    <height>583</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -128,13 +128,19 @@
     </item>
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
+      <property name="minimumSize">
+       <size>
+        <width>450</width>
+        <height>302</height>
+       </size>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
-         <widget class="QLabel" name="promptLabel">
+         <widget class="DropLabel" name="promptLabel">
           <property name="text">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;Drop your&lt;br&gt;PNG file here!&lt;/body&gt;&lt;/html&gt;</string>
           </property>
@@ -162,13 +168,20 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>507</width>
+     <width>865</width>
      <height>22</height>
     </rect>
    </property>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>DropLabel</class>
+   <extends>QLabel</extends>
+   <header>droplabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

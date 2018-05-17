@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    conversionconfig.cpp
+    conversionconfig.cpp \
+    droplabel.cpp
 
 HEADERS += \
         mainwindow.h \
-    conversionconfig.h
+    conversionconfig.h \
+    droplabel.h
 
 FORMS += \
         mainwindow.ui
