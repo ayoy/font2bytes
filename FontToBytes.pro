@@ -28,13 +28,15 @@ SOURCES += \
         mainwindow.cpp \
     conversionconfig.cpp \
     droplabel.cpp \
-    droppablestackedwidget.cpp
+    droppablestackedwidget.cpp \
+    imageconverter.cpp
 
 HEADERS += \
         mainwindow.h \
     conversionconfig.h \
     droplabel.h \
-    droppablestackedwidget.h
+    droppablestackedwidget.h \
+    imageconverter.h
 
 FORMS += \
         mainwindow.ui
