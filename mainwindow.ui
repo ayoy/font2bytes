@@ -40,13 +40,13 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="leftMargin">
-        <number>24</number>
+        <number>12</number>
        </property>
        <property name="topMargin">
         <number>24</number>
        </property>
        <property name="rightMargin">
-        <number>24</number>
+        <number>12</number>
        </property>
        <property name="bottomMargin">
         <number>24</number>

@@ -6,11 +6,12 @@ DropLabel::DropLabel(QWidget *parent):
     QLabel(parent),
     defaultPalette(palette())
 {
-    defaultPalette.setColor(QPalette::WindowText, Qt::gray);
+    defaultPalette.setColor(foregroundRole(), Qt::gray);
     setPalette(defaultPalette);
+    setAutoFillBackground(true);
+
     setFont(QFont("Helvetica", 42, QFont::Black));
     updateStyleSheet();
-    setAutoFillBackground(true);
 }
 
 void DropLabel::updateStyleSheet()
@@ -35,8 +36,8 @@ void DropLabel::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing);
 
     const int xOffset = 40;
-    const int yOffset = 30;
-    const qreal cornerRadius = 20.0;
+    const int yOffset = 80;
+    const qreal cornerRadius = 40.0;
 
     QFontMetrics fm(font());
     QStringList components = text().split('\n', QString::SkipEmptyParts);
