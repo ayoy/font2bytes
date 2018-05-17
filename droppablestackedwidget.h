@@ -16,6 +16,7 @@ public:
     }
 
 signals:
+    void imageFileDropped(const QUrl &url);
     void dropActionAvailableChanged(bool available);
 
 protected:

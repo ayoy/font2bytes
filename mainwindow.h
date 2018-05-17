@@ -22,6 +22,7 @@ protected:
 private slots:
     void updateConfig();
     void validateTextFieldInput();
+    void loadImageFile(const QUrl &url);
 
 private:
     Ui::MainWindow *ui;

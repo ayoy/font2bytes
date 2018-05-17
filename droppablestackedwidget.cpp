@@ -2,7 +2,6 @@
 #include <QDropEvent>
 #include <QMimeData>
 #include <QDebug>
-#include <QImageReader>
 
 DroppableStackedWidget::DroppableStackedWidget(QWidget * parent):
     QStackedWidget(parent)
@@ -13,8 +12,6 @@ DroppableStackedWidget::DroppableStackedWidget(QWidget * parent):
 void DroppableStackedWidget::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasUrls()) {
-        QUrl url = event->mimeData()->urls().last();
-        qDebug() << __PRETTY_FUNCTION__ << url;
         event->accept();
         setDropActionAvailable(true);
     }
@@ -28,7 +25,10 @@ void DroppableStackedWidget::dragLeaveEvent(QDragLeaveEvent *event)
 
 void DroppableStackedWidget::dropEvent(QDropEvent *event)
 {
-    const QMimeData *mimeData = event->mimeData();
-    qDebug() << __PRETTY_FUNCTION__ << mimeData;
-    setDropActionAvailable(false);
+    if (event->mimeData()->hasUrls()) {
+        QUrl url = event->mimeData()->urls().last();
+        qDebug() << __PRETTY_FUNCTION__ << url;
+        emit imageFileDropped(url);
+        setDropActionAvailable(false);
+    }
 }

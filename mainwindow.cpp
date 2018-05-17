@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->bitNumberingCheckBox, SIGNAL(clicked(bool)), this, SLOT(updateConfig()));
 
     connect(ui->stackedWidget, SIGNAL(dropActionAvailableChanged(bool)), ui->promptLabel, SLOT(setDropActionAvailable(bool)));
+    connect(ui->stackedWidget, SIGNAL(imageFileDropped(QUrl)), this, SLOT(loadImageFile(QUrl)));
 
     config.loadFromSettings();
 }
@@ -100,4 +101,10 @@ void MainWindow::applyCurrentConfig()
 
     ui->invertBitsCheckBox->setChecked(config.shouldInvertBits);
     ui->bitNumberingCheckBox->setChecked(config.bitNumbering == ConversionConfig::BitNumbering::MSB);
+}
+
+void MainWindow::loadImageFile(const QUrl &url)
+{
+    QImage image(url.path());
+    qDebug() << image.size();
 }
