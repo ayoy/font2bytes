@@ -38,7 +38,8 @@ HEADERS += \
     droplabel.h \
     droppablestackedwidget.h \
     imageconverter.h \
-    conversionrunnable.h
+    conversionrunnable.h \
+    bytewriter.h
 
 FORMS += \
         mainwindow.ui
