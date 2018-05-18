@@ -5,7 +5,10 @@ ImageConverter::ImageConverter(QObject *parent) : QObject(parent)
 
 }
 
-QString ImageConverter::convertImage(const QImage &image, bool *ok)
+QString ImageConverter::convertImage(bool *ok)
 {
+    if (ok) {
+        *ok = true;
+    }
     return QString();
 }

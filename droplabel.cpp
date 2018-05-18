@@ -1,6 +1,5 @@
 #include "droplabel.h"
 #include <QPainter>
-#include <QDebug>
 
 DropLabel::DropLabel(QWidget *parent):
     QLabel(parent),
@@ -16,7 +15,6 @@ DropLabel::DropLabel(QWidget *parent):
 
 void DropLabel::updateStyleSheet()
 {
-    qDebug() << __PRETTY_FUNCTION__ << m_dropActionAvailable;
     QPalette palette(this->palette());
     if (m_dropActionAvailable) {
         palette.setColor(backgroundRole(), defaultPalette.color(QPalette::Highlight));

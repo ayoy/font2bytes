@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "conversionrunnable.h"
 #include <QDebug>
+#include <QThreadPool>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,6 +26,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    if (conversion && !conversion->isFinished()) {
+        conversion->setCanceled(true);
+        conversion = nullptr;
+    }
     delete ui;
 }
 
@@ -34,8 +41,6 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::updateConfig()
 {
-    qDebug() << __PRETTY_FUNCTION__;
-
     bool converted = false;
     int intValue = ui->widthLineEdit->text().toInt(&converted);
     config.fontWidth = converted ? (uint8_t)intValue : 0;
@@ -60,7 +65,6 @@ void MainWindow::updateConfig()
 void MainWindow::validateTextFieldInput()
 {
     QLineEdit *lineEdit = qobject_cast<QLineEdit *>(sender());
-    qDebug() << __PRETTY_FUNCTION__ << lineEdit;
 
     bool converted = false;
     int intValue = lineEdit->text().toInt(&converted);
@@ -106,5 +110,30 @@ void MainWindow::applyCurrentConfig()
 void MainWindow::loadImageFile(const QUrl &url)
 {
     QImage image(url.path());
-    qDebug() << image.size();
+    if (image.isNull()) {
+        qDebug() << "image is null ._.";
+    } else {
+        qDebug() << image.size();
+        if (conversion && !conversion->isFinished()) {
+            conversion->setCanceled(true);
+        }
+
+        conversion = new ConversionRunnable();
+        conversion->imageConverter()->setConfig(config);
+        conversion->imageConverter()->setImage(image);
+
+        connect(conversion->imageConverter(), SIGNAL(conversionFinished()),
+                this, SLOT(imageConverted()),
+                Qt::BlockingQueuedConnection);
+
+        QThreadPool::globalInstance()->start(conversion);
+    }
+}
+
+void MainWindow::imageConverted()
+{
+    Q_ASSERT(conversion->isFinished());
+    qDebug() << __PRETTY_FUNCTION__;
+
+    conversion = nullptr;
 }

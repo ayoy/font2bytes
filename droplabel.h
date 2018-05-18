@@ -12,9 +12,7 @@ class DropLabel : public QLabel
 public:
     explicit DropLabel(QWidget * parent = nullptr);
 
-    inline bool isDropActionAvailable() const {
-        return m_dropActionAvailable;
-    }
+    inline bool isDropActionAvailable() const { return m_dropActionAvailable; }
 
 public slots:
     inline void setDropActionAvailable(bool available) {
