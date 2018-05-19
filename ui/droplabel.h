@@ -20,7 +20,9 @@ public slots:
 protected:
     void paintEvent(QPaintEvent *event) override;
     void updateStyleSheet();
-    bool m_dropActionAvailable;
+
+private:
+    bool m_dropActionAvailable { false };
 
     QPalette defaultPalette;
 };

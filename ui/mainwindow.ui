@@ -177,7 +177,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout">
@@ -213,11 +213,6 @@ PNG file here!</string>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QTextBrowser" name="textBrowser">
-          <property name="font">
-           <font>
-            <family>Menlo</family>
-           </font>
-          </property>
           <property name="lineWrapMode">
            <enum>QTextEdit::NoWrap</enum>
           </property>
