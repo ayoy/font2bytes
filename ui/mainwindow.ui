@@ -226,13 +226,6 @@ PNG file here!</string>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QPushButton" name="backButton">
-            <property name="text">
-             <string>Back</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -248,7 +241,7 @@ PNG file here!</string>
           <item>
            <widget class="QPushButton" name="copyButton">
             <property name="text">
-             <string>Copy</string>
+             <string>Copy to Clipboard</string>
             </property>
            </widget>
           </item>

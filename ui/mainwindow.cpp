@@ -20,9 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->bitNumberingCheckBox, SIGNAL(clicked(bool)), this, SLOT(updateConfig()));
     connect(ui->formatComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateConfig()));
 
-    connect(ui->stackedWidget, SIGNAL(dropActionAvailableChanged(bool)), ui->promptLabel, SLOT(setDropActionAvailable(bool)));
+    connect(ui->stackedWidget, SIGNAL(dropActionAvailableChanged(bool)), this, SLOT(setDropActionAvailable(bool)));
     connect(ui->stackedWidget, SIGNAL(imageFileDropped(QUrl)), this, SLOT(loadImageFile(QUrl)));
-    connect(ui->backButton, SIGNAL(clicked(bool)), this, SLOT(closeTextBrowser()));
 
     config.loadFromSettings();
 }
@@ -44,9 +43,7 @@ void MainWindow::setupSourceCodeGenerators()
     SourceCodeGeneratorItem cGenerator;
     cGenerator.title = tr("C/C++");
     cGenerator.createGenerator = [this]() {
-        SourceCodeOptions options;
-        options.bitNumbering = this->config.bitNumbering;
-        options.shouldInvertBits = this->config.shouldInvertBits;
+        SourceCodeOptions options(this->config.bitNumbering, this->config.shouldInvertBits);
         return new CCodeGenerator(options);
     };
     generators << cGenerator;
@@ -54,9 +51,7 @@ void MainWindow::setupSourceCodeGenerators()
     SourceCodeGeneratorItem arduinoGenerator;
     arduinoGenerator.title = tr("Arduino");
     arduinoGenerator.createGenerator = [this]() {
-        SourceCodeOptions options;
-        options.bitNumbering = this->config.bitNumbering;
-        options.shouldInvertBits = this->config.shouldInvertBits;
+        SourceCodeOptions options = { this->config.bitNumbering, this->config.shouldInvertBits };
         return new ArduinoCodeGenerator(options);
     };
     generators << arduinoGenerator;
@@ -83,14 +78,14 @@ void MainWindow::updateConfig()
     config.fontHeight = converted ? (uint8_t)intValue : 0;
 
     config.readingMode = ui->topBottomRadioButton->isChecked() ?
-                FontConverter::ReadingMode::TopToBottom :
-                FontConverter::ReadingMode::LeftToRight;
+                FontConverter::TopToBottom :
+                FontConverter::LeftToRight;
 
     config.shouldInvertBits = ui->invertBitsCheckBox->isChecked();
 
     config.bitNumbering = ui->bitNumberingCheckBox->isChecked() ?
-                SourceCodeOptions::BitNumbering::MSB :
-                SourceCodeOptions::BitNumbering::LSB;
+                SourceCodeOptions::MSB :
+                SourceCodeOptions::LSB;
 
     config.sourceCodeGeneratorIndex = ui->formatComboBox->currentIndex();
 
@@ -130,21 +125,33 @@ void MainWindow::applyCurrentConfig()
     ui->heightLineEdit->setText(fontString);
 
     switch (config.readingMode) {
-    case FontConverter::ReadingMode::TopToBottom:
+    case FontConverter::TopToBottom:
         ui->topBottomRadioButton->setChecked(true);
         break;
-    case FontConverter::ReadingMode::LeftToRight:
+    case FontConverter::LeftToRight:
         ui->leftRightRadioButton->setChecked(true);
         break;
     }
 
     ui->invertBitsCheckBox->setChecked(config.shouldInvertBits);
-    ui->bitNumberingCheckBox->setChecked(config.bitNumbering == SourceCodeOptions::BitNumbering::MSB);
+    ui->bitNumberingCheckBox->setChecked(config.bitNumbering == SourceCodeOptions::MSB);
 
     if (config.sourceCodeGeneratorIndex < ui->formatComboBox->count()
             and config.sourceCodeGeneratorIndex > 0)
     {
         ui->formatComboBox->setCurrentIndex(config.sourceCodeGeneratorIndex);
+    }
+}
+
+void MainWindow::setDropActionAvailable(bool available)
+{
+    ui->promptLabel->setDropActionAvailable(available);
+    if (available and ui->stackedWidget->currentIndex() == TextBrowser) {
+        dropActionHidesTextBrowser = true;
+        ui->stackedWidget->setCurrentIndex(PromptLabel);
+    } else if (!available and dropActionHidesTextBrowser) {
+        dropActionHidesTextBrowser = false;
+        ui->stackedWidget->setCurrentIndex(TextBrowser);
     }
 }
 
@@ -155,7 +162,7 @@ void MainWindow::loadImageFile(const QUrl &url)
         qDebug() << "image is null ._.";
     } else {
         qDebug() << image.size();
-        if (conversion && !conversion->isFinished()) {
+        if (conversion and !conversion->isFinished()) {
             conversion->setCanceled(true);
         }
 
@@ -178,14 +185,9 @@ void MainWindow::imageConverted()
 {
     Q_ASSERT(conversion->isFinished());
     qDebug() << __PRETTY_FUNCTION__;
-    qDebug() << QString::fromStdString(conversion->imageConverter()->sourceCodeGenerator()->sourceCode());
+//    qDebug() << QString::fromStdString(conversion->imageConverter()->sourceCodeGenerator()->sourceCode());
     ui->stackedWidget->setCurrentIndex(1);
     ui->textBrowser->setText(QString::fromStdString(conversion->imageConverter()->sourceCodeGenerator()->sourceCode()));
 
     conversion = nullptr;
-}
-
-void MainWindow::closeTextBrowser()
-{
-    ui->stackedWidget->setCurrentIndex(0);
 }

@@ -32,7 +32,7 @@ void CCodeGenerator::beginArray(const std::string &name)
 
 void CCodeGenerator::writeByte(uint8_t byte)
 {
-    if (options.bitNumbering == SourceCodeOptions::BitNumbering::MSB) {
+    if (options.bitNumbering == SourceCodeOptions::MSB) {
         uint8_t reversedByte = 0;
         for (uint8_t i = 0; i < 8; i++) {
             if ((byte & (1<<i)) != 0) {

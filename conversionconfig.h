@@ -10,8 +10,8 @@ struct ConversionConfig
     uint8_t fontWidth = 0;
     uint8_t fontHeight = 0;
     bool shouldInvertBits = false;
-    SourceCodeOptions::BitNumbering bitNumbering = SourceCodeOptions::BitNumbering::LSB;
-    FontConverter::ReadingMode readingMode = FontConverter::ReadingMode::TopToBottom;
+    SourceCodeOptions::BitNumbering bitNumbering = SourceCodeOptions::LSB;
+    FontConverter::ReadingMode readingMode = FontConverter::TopToBottom;
 
     int sourceCodeGeneratorIndex = 0;
 

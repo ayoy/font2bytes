@@ -15,10 +15,10 @@ void ConversionConfig::loadFromSettings()
     fontWidth = settings.value(SettingsFontWidthKey, 0).toUInt();
     fontHeight = settings.value(SettingsFontHeightKey, 0).toUInt();
     readingMode = static_cast<FontConverter::ReadingMode>(
-                settings.value(SettingsReadingModeKey, FontConverter::ReadingMode::TopToBottom).toUInt());
+                settings.value(SettingsReadingModeKey, FontConverter::TopToBottom).toUInt());
     shouldInvertBits = settings.value(SettingsShouldInvertBitsKey, false).toBool();
     bitNumbering = static_cast<SourceCodeOptions::BitNumbering>(
-                settings.value(SettingsBitNumberingKey, SourceCodeOptions::BitNumbering::LSB).toUInt());
+                settings.value(SettingsBitNumberingKey, SourceCodeOptions::LSB).toUInt());
     sourceCodeGeneratorIndex = settings.value(SettingsSourceCodeGeneratorIndexKey, 0).toInt();
 }
 

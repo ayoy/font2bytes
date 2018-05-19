@@ -33,12 +33,15 @@ private slots:
     void validateTextFieldInput();
     void loadImageFile(const QUrl &url);
     void imageConverted();
-    void closeTextBrowser();
+    void setDropActionAvailable(bool available);
 
 private:
+    enum StackedWidgetPage { PromptLabel = 0, TextBrowser = 1 };
+
     Ui::MainWindow *ui;
     ConversionConfig config;
     QThreadPool *threadPool;
+    bool dropActionHidesTextBrowser { false };
     ConversionRunnable *conversion { nullptr };
     QList<SourceCodeGeneratorItem> generators;
 

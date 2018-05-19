@@ -8,6 +8,11 @@ struct SourceCodeOptions
 {
     enum BitNumbering { LSB, MSB };
 
+    SourceCodeOptions(BitNumbering bitNumbering, bool shouldInvertBits) :
+        bitNumbering(bitNumbering),
+        shouldInvertBits(shouldInvertBits)
+    {}
+
     BitNumbering bitNumbering { LSB };
     bool shouldInvertBits { false };
 };
