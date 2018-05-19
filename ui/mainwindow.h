@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "conversionconfig.h"
 #include <functional>
+#include <QElapsedTimer>
 
 class QThreadPool;
 class ConversionRunnable;
@@ -37,15 +38,15 @@ private slots:
 
 private:
     enum StackedWidgetPage { PromptLabel = 0, TextBrowser = 1 };
+    void applyCurrentConfig();
+    void setupSourceCodeGenerators();
 
     Ui::MainWindow *ui;
     ConversionConfig config;
     bool dropActionHidesTextBrowser { false };
     ConversionRunnable *conversion { nullptr };
     QList<SourceCodeGeneratorItem> generators;
-
-    void applyCurrentConfig();
-    void setupSourceCodeGenerators();
+    QElapsedTimer conversionTimer;
 };
 
 #endif // MAINWINDOW_H

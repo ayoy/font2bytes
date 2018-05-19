@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QThreadPool>
 #include <QFontDatabase>
+#include <QElapsedTimer>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -182,15 +183,21 @@ void MainWindow::loadImageFile(const QUrl &url)
                 this, SLOT(imageConverted()),
                 Qt::BlockingQueuedConnection);
 
+        conversionTimer.start();
         QThreadPool::globalInstance()->start(conversion);
     }
 }
 
 void MainWindow::imageConverted()
 {
+    qint64 conversionTime = conversionTimer.elapsed();
+    conversionTimer.invalidate();
+    ui->statusBar->showMessage(tr("%1x%2 font generated in %3ms")
+                               .arg(QString::number(config.fontHeight),
+                                    QString::number(config.fontWidth),
+                                    QString::number(conversionTime)));
     Q_ASSERT(conversion->isFinished());
     qDebug() << __PRETTY_FUNCTION__;
-//    qDebug() << QString::fromStdString(conversion->imageConverter()->sourceCodeGenerator()->sourceCode());
     ui->stackedWidget->setCurrentIndex(1);
     ui->textBrowser->setText(QString::fromStdString(conversion->imageConverter()->sourceCodeGenerator()->sourceCode()));
 
