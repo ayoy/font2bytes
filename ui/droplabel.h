@@ -1,10 +1,10 @@
 #ifndef DROPLABEL_H
 #define DROPLABEL_H
 
-#include <QLabel>
+#include "promptlabel.h"
 #include <QApplication>
 
-class DropLabel : public QLabel
+class DropLabel : public PromptLabel
 {
     Q_OBJECT
     Q_PROPERTY(bool dropActionAvailable READ isDropActionAvailable WRITE setDropActionAvailable)
@@ -23,8 +23,6 @@ protected:
 
 private:
     bool m_dropActionAvailable { false };
-
-    QPalette defaultPalette;
 };
 
 #endif // DROPLABEL_H

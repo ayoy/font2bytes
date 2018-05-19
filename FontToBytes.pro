@@ -35,7 +35,8 @@ SOURCES += \
     lib/sourcecodegenerator.cpp \
     inputqimage.cpp \
     lib/fixedconverter.cpp \
-    lib/convertererror.cpp
+    lib/convertererror.cpp \
+    ui/promptlabel.cpp
 
 HEADERS += \
     ui/mainwindow.h \
@@ -50,7 +51,8 @@ HEADERS += \
     inputqimage.h \
     lib/fontconverter.h \
     lib/fixedconverter.h \
-    lib/convertererror.h
+    lib/convertererror.h \
+    ui/promptlabel.h
 
 FORMS += \
         ui/mainwindow.ui

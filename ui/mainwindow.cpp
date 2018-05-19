@@ -119,10 +119,15 @@ void MainWindow::validateTextFieldInput()
 
 void MainWindow::applyCurrentConfig()
 {
-    if (config.isValid()) {
-        ui->promptLabel->setText(tr("Drop your\nPNG file here!"));
-    } else {
-        ui->promptLabel->setText(tr("First, set up font conversion parameters\non the left."));
+    if (ui->stackedWidget->currentIndex() != TextBrowser) {
+        if (config.isValid()) {
+            ui->stackedWidget->setCurrentIndex(PromptLabel);
+        } else {
+            ui->stackedWidget->setCurrentIndex(InfoLabel);
+        }
+
+        bool dropEnabled = ui->stackedWidget->currentIndex() != InfoLabel;
+        ui->stackedWidget->setAcceptDrops(dropEnabled);
     }
 
     QString fontString = config.isWidthValid() ? QString::number(config.fontWidth) : "";
@@ -198,7 +203,7 @@ void MainWindow::imageConverted()
                                     QString::number(conversionTime)));
     Q_ASSERT(conversion->isFinished());
     qDebug() << __PRETTY_FUNCTION__;
-    ui->stackedWidget->setCurrentIndex(1);
+    ui->stackedWidget->setCurrentIndex(TextBrowser);
     ui->textBrowser->setText(QString::fromStdString(conversion->imageConverter()->sourceCodeGenerator()->sourceCode()));
 
     conversion = nullptr;

@@ -6,7 +6,6 @@
 DroppableStackedWidget::DroppableStackedWidget(QWidget * parent):
     QStackedWidget(parent)
 {
-    setAcceptDrops(true);
 }
 
 void DroppableStackedWidget::dragEnterEvent(QDragEnterEvent *event)

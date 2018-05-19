@@ -180,6 +180,22 @@
        <number>0</number>
       </property>
       <widget class="QWidget" name="page">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="PromptLabel" name="infoLabel">
+          <property name="text">
+           <string>First off, set up
+font conversion
+parameters</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_2">
        <layout class="QGridLayout" name="gridLayout">
         <property name="leftMargin">
          <number>0</number>
@@ -209,7 +225,7 @@ PNG file here!</string>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_2">
+      <widget class="QWidget" name="page_3">
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QTextBrowser" name="textBrowser">
@@ -279,6 +295,11 @@ PNG file here!</string>
    <extends>QStackedWidget</extends>
    <header>droppablestackedwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PromptLabel</class>
+   <extends>QLabel</extends>
+   <header>promptlabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -37,7 +37,7 @@ private slots:
     void setDropActionAvailable(bool available);
 
 private:
-    enum StackedWidgetPage { PromptLabel = 0, TextBrowser = 1 };
+    enum StackedWidgetPage { InfoLabel = 0, PromptLabel = 1, TextBrowser = 2 };
     void applyCurrentConfig();
     void setupSourceCodeGenerators();
 

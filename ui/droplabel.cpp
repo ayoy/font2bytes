@@ -2,14 +2,8 @@
 #include <QPainter>
 
 DropLabel::DropLabel(QWidget *parent):
-    QLabel(parent),
-    defaultPalette(palette())
+    PromptLabel(parent)
 {
-    defaultPalette.setColor(foregroundRole(), Qt::gray);
-    setPalette(defaultPalette);
-    setAutoFillBackground(true);
-
-    setFont(QFont("Helvetica", 42, QFont::Black));
     updateStyleSheet();
 }
 
