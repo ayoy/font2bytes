@@ -41,8 +41,8 @@ void ConversionRunnable::setCanceled(bool canceled)
 void ConversionRunnable::run()
 {
     qDebug() << __PRETTY_FUNCTION__ << QThread::currentThread();
-    QThread::currentThread()->sleep(2);
-    m_imageConverter->convertImage();
+//    QThread::currentThread()->sleep(2);
+    m_imageConverter->convert();
 
     setFinished(true);
     if (!isCanceled()) {

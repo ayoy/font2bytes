@@ -15,13 +15,7 @@ public:
     inline bool isDropActionAvailable() const { return m_dropActionAvailable; }
 
 public slots:
-    inline void setDropActionAvailable(bool available) {
-        if (m_dropActionAvailable != available) {
-            m_dropActionAvailable = available;
-            updateStyleSheet();
-            update();
-        }
-    }
+    void setDropActionAvailable(bool available);
 
 protected:
     void paintEvent(QPaintEvent *event) override;

@@ -6,6 +6,7 @@ static const QString SettingsFontHeightKey = "fontHeight";
 static const QString SettingsReadingModeKey = "readingMode";
 static const QString SettingsShouldInvertBitsKey = "shouldInvertBits";
 static const QString SettingsBitNumberingKey = "bitNumbering";
+static const QString SettingsSourceCodeGeneratorIndexKey = "sourceCodeGeneratorIndex";
 
 void ConversionConfig::loadFromSettings()
 {
@@ -13,9 +14,12 @@ void ConversionConfig::loadFromSettings()
     settings.sync();
     fontWidth = settings.value(SettingsFontWidthKey, 0).toUInt();
     fontHeight = settings.value(SettingsFontHeightKey, 0).toUInt();
-    readingMode = static_cast<ReadingMode>(settings.value(SettingsReadingModeKey, ReadingMode::TopToBottom).toUInt());
+    readingMode = static_cast<FontConverter::ReadingMode>(
+                settings.value(SettingsReadingModeKey, FontConverter::ReadingMode::TopToBottom).toUInt());
     shouldInvertBits = settings.value(SettingsShouldInvertBitsKey, false).toBool();
-    bitNumbering = static_cast<BitNumbering>(settings.value(SettingsBitNumberingKey, BitNumbering::LSB).toUInt());
+    bitNumbering = static_cast<SourceCodeOptions::BitNumbering>(
+                settings.value(SettingsBitNumberingKey, SourceCodeOptions::BitNumbering::LSB).toUInt());
+    sourceCodeGeneratorIndex = settings.value(SettingsSourceCodeGeneratorIndexKey, 0).toInt();
 }
 
 void ConversionConfig::saveToSettings() const
@@ -26,5 +30,6 @@ void ConversionConfig::saveToSettings() const
     settings.setValue(SettingsReadingModeKey, readingMode);
     settings.setValue(SettingsShouldInvertBitsKey, shouldInvertBits);
     settings.setValue(SettingsBitNumberingKey, bitNumbering);
+    settings.setValue(SettingsSourceCodeGeneratorIndexKey, sourceCodeGeneratorIndex);
     settings.sync();
 }

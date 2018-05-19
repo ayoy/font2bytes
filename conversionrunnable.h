@@ -4,6 +4,8 @@
 #include <QRunnable>
 #include <QMutex>
 #include "imageconverter.h"
+#include "sourcecodegenerator.h"
+#include "inputimage.h"
 
 class ConversionRunnable : public QRunnable
 {

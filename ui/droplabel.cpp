@@ -26,6 +26,15 @@ void DropLabel::updateStyleSheet()
     setPalette(palette);
 }
 
+void DropLabel::setDropActionAvailable(bool available)
+{
+    if (m_dropActionAvailable != available) {
+        m_dropActionAvailable = available;
+        updateStyleSheet();
+        update();
+    }
+}
+
 void DropLabel::paintEvent(QPaintEvent *event)
 {
     QLabel::paintEvent(event);

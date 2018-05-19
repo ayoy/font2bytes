@@ -22,24 +22,35 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += lib ui
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
+    main.cpp \
+    ui/mainwindow.cpp \
+    ui/droplabel.cpp \
+    ui/droppablestackedwidget.cpp \
     conversionconfig.cpp \
-    droplabel.cpp \
-    droppablestackedwidget.cpp \
     imageconverter.cpp \
-    conversionrunnable.cpp
+    conversionrunnable.cpp \
+    lib/sourcecodegenerator.cpp \
+    inputqimage.cpp \
+    lib/fixedconverter.cpp \
+    lib/convertererror.cpp
 
 HEADERS += \
-        mainwindow.h \
+    ui/mainwindow.h \
+    ui/droplabel.h \
+    ui/droppablestackedwidget.h \
     conversionconfig.h \
-    droplabel.h \
-    droppablestackedwidget.h \
     imageconverter.h \
     conversionrunnable.h \
-    bytewriter.h
+    lib/bytewriter.h \
+    lib/sourcecodegenerator.h \
+    lib/inputimage.h \
+    inputqimage.h \
+    lib/fontconverter.h \
+    lib/fixedconverter.h \
+    lib/convertererror.h
 
 FORMS += \
-        mainwindow.ui
+        ui/mainwindow.ui

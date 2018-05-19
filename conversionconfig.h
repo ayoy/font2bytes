@@ -2,27 +2,28 @@
 #define CONVERSIONCONFIG_H
 
 #include <cstdint>
+#include "sourcecodegenerator.h"
+#include "fontconverter.h"
 
 struct ConversionConfig
 {
-    enum ReadingMode { TopToBottom, LeftToRight };
-    enum BitNumbering { LSB, MSB };
-
     uint8_t fontWidth = 0;
     uint8_t fontHeight = 0;
     bool shouldInvertBits = false;
-    BitNumbering bitNumbering = LSB;
-    ReadingMode readingMode = TopToBottom;
+    SourceCodeOptions::BitNumbering bitNumbering = SourceCodeOptions::BitNumbering::LSB;
+    FontConverter::ReadingMode readingMode = FontConverter::ReadingMode::TopToBottom;
+
+    int sourceCodeGeneratorIndex = 0;
 
     void loadFromSettings();
     void saveToSettings() const;
 
     inline bool isHeightValid() const {
-        return fontHeight >= 8;
+        return fontHeight >= 1;
     }
 
     inline bool isWidthValid() const {
-        return fontWidth >= 8;
+        return fontWidth >= 1;
     }
 
     inline bool isValid() const {
