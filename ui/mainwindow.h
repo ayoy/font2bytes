@@ -40,7 +40,6 @@ private:
 
     Ui::MainWindow *ui;
     ConversionConfig config;
-    QThreadPool *threadPool;
     bool dropActionHidesTextBrowser { false };
     ConversionRunnable *conversion { nullptr };
     QList<SourceCodeGeneratorItem> generators;
