@@ -67,14 +67,14 @@
           <item row="1" column="1">
            <widget class="QLineEdit" name="widthLineEdit">
             <property name="placeholderText">
-             <string>8-255px</string>
+             <string>1-255px</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
            <widget class="QLineEdit" name="heightLineEdit">
             <property name="placeholderText">
-             <string>8-255px</string>
+             <string>1-255px</string>
             </property>
            </widget>
           </item>
