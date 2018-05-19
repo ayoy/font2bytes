@@ -6,7 +6,7 @@
 #include <QThreadPool>
 #include <QFontDatabase>
 #include <QElapsedTimer>
-#include <QMessageBox>
+#include "shakeanimation.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -172,11 +172,9 @@ void MainWindow::loadImageFile(const QUrl &url)
 {
     QImage image(url.path());
     if (image.isNull()) {
-        qDebug() << "image is null ._.";
-        QMessageBox::critical(this,
-                              tr("Couldn't read image from provided file"),
-                              tr("Couldn't read image from provided file"),
-                              QMessageBox::Close);
+        ShakeAnimation *shakeAnimation = new ShakeAnimation(ui->promptLabel);
+        shakeAnimation->start(ShakeAnimation::DeleteWhenStopped);
+        statusBar()->showMessage(tr("Couldn't read image from provided file"), 5000);
     } else {
         qDebug() << image.size();
         if (conversion and !conversion->isFinished()) {
@@ -213,10 +211,9 @@ void MainWindow::imageConverted(const QString &sourceCode, const ConverterError 
         ui->stackedWidget->setCurrentIndex(TextBrowser);
         ui->textBrowser->setText(sourceCode);
     } else {
-        QMessageBox::critical(this,
-                              QString::fromStdString(error.summary),
-                              QString::fromStdString(error.description),
-                              QMessageBox::Close);
+        ShakeAnimation *shakeAnimation = new ShakeAnimation(ui->promptLabel);
+        shakeAnimation->start(ShakeAnimation::DeleteWhenStopped);
+        statusBar()->showMessage(QString::fromStdString(error.description), 5000);
     }
 
     conversion = nullptr;

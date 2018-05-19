@@ -36,7 +36,8 @@ SOURCES += \
     inputqimage.cpp \
     lib/fixedconverter.cpp \
     lib/convertererror.cpp \
-    ui/promptlabel.cpp
+    ui/promptlabel.cpp \
+    ui/shakeanimation.cpp
 
 HEADERS += \
     ui/mainwindow.h \
@@ -52,7 +53,8 @@ HEADERS += \
     lib/fontconverter.h \
     lib/fixedconverter.h \
     lib/convertererror.h \
-    ui/promptlabel.h
+    ui/promptlabel.h \
+    ui/shakeanimation.h
 
 FORMS += \
         ui/mainwindow.ui

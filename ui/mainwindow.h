@@ -40,6 +40,7 @@ private:
     enum StackedWidgetPage { InfoLabel = 0, PromptLabel = 1, TextBrowser = 2 };
     void applyCurrentConfig();
     void setupSourceCodeGenerators();
+    void shake(QWidget *widget);
 
     Ui::MainWindow *ui;
     ConversionConfig config;
@@ -47,6 +48,7 @@ private:
     ConversionRunnable *conversion { nullptr };
     QList<SourceCodeGeneratorItem> generators;
     QElapsedTimer conversionTimer;
+    QTimer *statusBarTimer { nullptr };
 };
 
 #endif // MAINWINDOW_H
