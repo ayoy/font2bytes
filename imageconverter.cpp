@@ -1,6 +1,7 @@
 #include "imageconverter.h"
 #include "fixedconverter.h"
 #include "inputqimage.h"
+#include <functional>
 
 ImageConverter::ImageConverter(QObject *parent) : QObject(parent)
 {
@@ -20,25 +21,28 @@ ImageConverter::~ImageConverter()
 
 QString ImageConverter::convert(bool *ok)
 {
-    bool success = false;
+    std::function<QString(const QString &)> tearDown = [this, ok](const QString &sourceCode) {
+        bool success = this->m_error == ConverterError::NoError;
+        if (ok) {
+            *ok = success;
+        }
+        return sourceCode;
+    };
+
+
     if (!m_image) {
         m_error = "Input image not provided";
-        return QString();
+        return tearDown(QString());
     }
     if (!m_sourceCodeGenerator) {
         m_error = "Source code generator not provided";
-        return QString();
+        return tearDown(QString());
     }
 
     FixedConverter converter(m_config.fontWidth, m_config.fontHeight, m_config.readingMode);
-    converter.convert(*m_image, m_sourceCodeGenerator);
+    m_error = converter.convert(*m_image, m_sourceCodeGenerator);
 
     QString result = QString::fromStdString(m_sourceCodeGenerator->sourceCode());
 
-    success = result.count() > 0;
-    if (ok) {
-        *ok = success;
-    }
-
-    return result;
+    return tearDown(result);
 }

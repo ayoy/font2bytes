@@ -62,6 +62,9 @@
             <property name="text">
              <string>Width</string>
             </property>
+            <property name="buddy">
+             <cstring>widthLineEdit</cstring>
+            </property>
            </widget>
           </item>
           <item row="1" column="1">
@@ -82,6 +85,9 @@
            <widget class="QLabel" name="heightLabel_2">
             <property name="text">
              <string>Height</string>
+            </property>
+            <property name="buddy">
+             <cstring>heightLineEdit</cstring>
             </property>
            </widget>
           </item>
@@ -162,6 +168,110 @@
          </property>
         </spacer>
        </item>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="palette">
+          <palette>
+           <active>
+            <colorrole role="WindowText">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>128</red>
+               <green>128</green>
+               <blue>128</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Link">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>128</red>
+               <green>128</green>
+               <blue>128</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="LinkVisited">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>128</red>
+               <green>128</green>
+               <blue>128</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </active>
+           <inactive>
+            <colorrole role="WindowText">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>128</red>
+               <green>128</green>
+               <blue>128</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Link">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>128</red>
+               <green>128</green>
+               <blue>128</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="LinkVisited">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>128</red>
+               <green>128</green>
+               <blue>128</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </inactive>
+           <disabled>
+            <colorrole role="WindowText">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>128</red>
+               <green>128</green>
+               <blue>128</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Link">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>128</red>
+               <green>128</green>
+               <blue>128</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="LinkVisited">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>128</red>
+               <green>128</green>
+               <blue>128</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </disabled>
+          </palette>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Font to Bytes, Qt port.&lt;br/&gt;© 2018 Dominik Kapusta&lt;br/&gt;&lt;a href=&quot;http://kapusta.cc&quot; style=&quot;color: #7F7F7F;&quot;&gt;http://kapusta.cc&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -184,7 +294,7 @@
         <item row="0" column="0">
          <widget class="PromptLabel" name="infoLabel">
           <property name="text">
-           <string>First off, set up
+           <string>Start by setting up
 font conversion
 parameters</string>
           </property>
@@ -302,6 +412,18 @@ PNG file here!</string>
    <header>promptlabel.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>heightLineEdit</tabstop>
+  <tabstop>widthLineEdit</tabstop>
+  <tabstop>topBottomRadioButton</tabstop>
+  <tabstop>leftRightRadioButton</tabstop>
+  <tabstop>invertBitsCheckBox</tabstop>
+  <tabstop>bitNumberingCheckBox</tabstop>
+  <tabstop>formatComboBox</tabstop>
+  <tabstop>textBrowser</tabstop>
+  <tabstop>copyButton</tabstop>
+  <tabstop>saveAsButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

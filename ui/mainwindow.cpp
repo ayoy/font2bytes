@@ -6,6 +6,7 @@
 #include <QThreadPool>
 #include <QFontDatabase>
 #include <QElapsedTimer>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,6 +18,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QFont fixedFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     fixedFont.setPointSize(13);
     ui->textBrowser->setFont(fixedFont);
+    QFont infoFont = ui->infoLabel->font();
+    infoFont.setPixelSize(32);
+    ui->infoLabel->setFont(infoFont);
 
     connect(ui->widthLineEdit, SIGNAL(editingFinished()), this, SLOT(validateTextFieldInput()));
     connect(ui->heightLineEdit, SIGNAL(editingFinished()), this, SLOT(validateTextFieldInput()));
@@ -125,10 +129,8 @@ void MainWindow::applyCurrentConfig()
         } else {
             ui->stackedWidget->setCurrentIndex(InfoLabel);
         }
-
-        bool dropEnabled = ui->stackedWidget->currentIndex() != InfoLabel;
-        ui->stackedWidget->setAcceptDrops(dropEnabled);
     }
+    ui->stackedWidget->setAcceptDrops(config.isValid());
 
     QString fontString = config.isWidthValid() ? QString::number(config.fontWidth) : "";
     ui->widthLineEdit->setText(fontString);
@@ -171,6 +173,10 @@ void MainWindow::loadImageFile(const QUrl &url)
     QImage image(url.path());
     if (image.isNull()) {
         qDebug() << "image is null ._.";
+        QMessageBox::critical(this,
+                              tr("Couldn't read image from provided file"),
+                              tr("Couldn't read image from provided file"),
+                              QMessageBox::Close);
     } else {
         qDebug() << image.size();
         if (conversion and !conversion->isFinished()) {
@@ -184,8 +190,8 @@ void MainWindow::loadImageFile(const QUrl &url)
         conversion->imageConverter()->setSourceCodeGenerator(generator);
         conversion->imageConverter()->setConfig(config);
 
-        connect(conversion->imageConverter(), SIGNAL(conversionFinished()),
-                this, SLOT(imageConverted()),
+        connect(conversion->imageConverter(), SIGNAL(conversionFinished(QString,ConverterError)),
+                this, SLOT(imageConverted(QString,ConverterError)),
                 Qt::BlockingQueuedConnection);
 
         conversionTimer.start();
@@ -193,7 +199,7 @@ void MainWindow::loadImageFile(const QUrl &url)
     }
 }
 
-void MainWindow::imageConverted()
+void MainWindow::imageConverted(const QString &sourceCode, const ConverterError &error)
 {
     qint64 conversionTime = conversionTimer.elapsed();
     conversionTimer.invalidate();
@@ -203,8 +209,15 @@ void MainWindow::imageConverted()
                                     QString::number(conversionTime)));
     Q_ASSERT(conversion->isFinished());
     qDebug() << __PRETTY_FUNCTION__;
-    ui->stackedWidget->setCurrentIndex(TextBrowser);
-    ui->textBrowser->setText(QString::fromStdString(conversion->imageConverter()->sourceCodeGenerator()->sourceCode()));
+    if (error == ConverterError::NoError) {
+        ui->stackedWidget->setCurrentIndex(TextBrowser);
+        ui->textBrowser->setText(sourceCode);
+    } else {
+        QMessageBox::critical(this,
+                              QString::fromStdString(error.summary),
+                              QString::fromStdString(error.description),
+                              QMessageBox::Close);
+    }
 
     conversion = nullptr;
 }

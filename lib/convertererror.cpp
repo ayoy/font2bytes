@@ -9,12 +9,12 @@ ConverterError & ConverterError::operator =(const std::string &summary)
     return *this;
 }
 
-bool ConverterError::operator ==(const ConverterError &rhs)
+bool ConverterError::operator ==(const ConverterError &rhs) const
 {
     return (summary.compare(rhs.summary) == 0) and (description.compare(rhs.description) == 0);
 }
 
-bool ConverterError::operator !=(const ConverterError &rhs)
+bool ConverterError::operator !=(const ConverterError &rhs) const
 {
     return !(*this == rhs);
 }

@@ -14,8 +14,8 @@ struct ConverterError
     {}
 
     ConverterError & operator=(const std::string &summary);
-    bool operator ==(const ConverterError &rhs);
-    bool operator !=(const ConverterError &rhs);
+    bool operator ==(const ConverterError &rhs) const;
+    bool operator !=(const ConverterError &rhs) const;
 
 
     std::string summary;

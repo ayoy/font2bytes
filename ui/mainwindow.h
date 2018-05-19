@@ -33,7 +33,7 @@ private slots:
     void updateConfig();
     void validateTextFieldInput();
     void loadImageFile(const QUrl &url);
-    void imageConverted();
+    void imageConverted(const QString &sourceCode, const ConverterError &error);
     void setDropActionAvailable(bool available);
 
 private:

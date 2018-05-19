@@ -35,7 +35,7 @@ public:
     inline ConverterError error() const { return m_error; }
 
 signals:
-    void conversionFinished();
+    void conversionFinished(const QString &sourceCode, const ConverterError &error);
 
 private:
     SourceCodeGenerator *m_sourceCodeGenerator;
