@@ -1,4 +1,5 @@
 #include "sourcecodegenerator.h"
+#include <ctime>
 
 SourceCodeGenerator::SourceCodeGenerator(const SourceCodeOptions &options):
     options(options),
@@ -22,7 +23,14 @@ CCodeGenerator::CCodeGenerator(const SourceCodeOptions &options) :
 void CCodeGenerator::begin()
 {
     stream().flush();
-    stream() << "//\n// Font Data\n// Created: \(dateTime)\n//\n";
+
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[22];
+    tstruct = *localtime(&now);
+    strftime(buf, sizeof(buf), "%d/%m/%Y at %H:%M:%S", &tstruct);
+
+    stream() << "//\n// Font Data\n// Created: " << buf << "\n//\n";
 }
 
 void CCodeGenerator::beginArray(const std::string &name)
