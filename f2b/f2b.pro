@@ -8,6 +8,7 @@ QT       -= core gui
 
 TARGET = f2b
 TEMPLATE = lib
+VERSION = 1.0.0
 
 DEFINES += F2B_LIBRARY
 
