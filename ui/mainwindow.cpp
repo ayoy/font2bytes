@@ -214,6 +214,9 @@ void MainWindow::imageConverted(const QString &sourceCode, const ConverterError 
         ShakeAnimation *shakeAnimation = new ShakeAnimation(ui->promptLabel);
         shakeAnimation->start(ShakeAnimation::DeleteWhenStopped);
         statusBar()->showMessage(QString::fromStdString(error.description), 5000);
+        QPalette palette = statusBar()->palette();
+        palette.setColor(QPalette::WindowText, Qt::red);
+        statusBar()->setPalette(palette);
     }
 
     conversion = nullptr;

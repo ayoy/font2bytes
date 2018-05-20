@@ -1,6 +1,5 @@
 #include "shakeanimation.h"
 #include <QWidget>
-#include <QDebug>
 #include <QPropertyAnimation>
 
 ShakeAnimation::ShakeAnimation(QWidget *target, QObject *parent) :
@@ -20,30 +19,14 @@ void ShakeAnimation::setupAnimations()
     int remainingShakes = m_maxShakesCount;
 
     auto startValue = m_targetObject->pos();
-    qDebug() << startValue;
 
     for (int i = 0; i < animationCount(); i++) {
         removeAnimation(animationAt(0));
     }
 
     while (currentOffset > 1) {
-        QPropertyAnimation *animation = new QPropertyAnimation(m_targetObject, "pos");
-        auto endValue = startValue;
-        endValue.rx() -= currentOffset;
-        animation->setEndValue(endValue);
-        currentOffset *= m_breakFactor;
-        currentOffset = qRound(currentOffset);
-        addAnimation(animation);
-        qDebug() << animation->startValue() << animation->endValue();
-
-        animation = new QPropertyAnimation(m_targetObject, "pos");
-        endValue = startValue;
-        endValue.rx() += currentOffset;
-        animation->setEndValue(endValue);
-        currentOffset *= m_breakFactor;
-        currentOffset = qRound(currentOffset);
-        addAnimation(animation);
-        qDebug() << animation->startValue() << animation->endValue();
+        addPosAnimation(startValue, &currentOffset, Left);
+        addPosAnimation(startValue, &currentOffset, Right);
 
         remainingShakes -= 1;
         if (remainingShakes <= 0) {
@@ -54,7 +37,6 @@ void ShakeAnimation::setupAnimations()
     QPropertyAnimation *animation = new QPropertyAnimation(m_targetObject, "pos");
     animation->setEndValue(startValue);
     addAnimation(animation);
-    qDebug() << animation->startValue() << animation->endValue();
 
     int animationCount = this->animationCount();
     qreal singleAnimationDuration = m_maxDuration / animationCount;
@@ -63,7 +45,19 @@ void ShakeAnimation::setupAnimations()
         QPropertyAnimation *animation = static_cast<QPropertyAnimation *>(animationAt(i));
         animation->setDuration(singleAnimationDuration);
     }
+}
 
-    qDebug() << duration();
-
+void ShakeAnimation::addPosAnimation(QPoint startValue, qreal *offset, Direction direction)
+{
+    QPropertyAnimation *animation = new QPropertyAnimation(m_targetObject, "pos");
+    auto endValue = startValue;
+    if (direction == Left) {
+        endValue.rx() -= *offset;
+    } else {
+        endValue.rx() += *offset;
+    }
+    animation->setEndValue(endValue);
+    *offset *= m_breakFactor;
+    *offset = qRound(*offset);
+    addAnimation(animation);
 }

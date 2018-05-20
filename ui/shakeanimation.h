@@ -34,6 +34,9 @@ public:
 private:
     void setupAnimations();
 
+    enum Direction { Left, Right };
+    void addPosAnimation(QPoint startValue, qreal *offset, Direction direction);
+
     QWidget *m_targetObject;
     int m_offset { 15 };
     qreal m_breakFactor { 0.8 };
