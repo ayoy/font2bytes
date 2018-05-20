@@ -10,7 +10,13 @@ class FontConverter
 public:
     virtual ConverterError convert(const InputImage &image, ByteWriter *byteWriter) = 0;
 
-    enum ReadingMode { TopToBottom, LeftToRight };
+    /**
+     * @brief The direction of the conversion
+     */
+    enum ReadingMode {
+        TopToBottom, /// Each character from top to bottom.
+        LeftToRight  /// Each character from left to right.
+    };
 };
 
 #endif // FONTCONVERTER_H
