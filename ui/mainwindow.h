@@ -35,6 +35,8 @@ private slots:
     void loadImageFile(const QUrl &url);
     void imageConverted(const QString &sourceCode, const ConverterError &error);
     void setDropActionAvailable(bool available);
+    void copyToClipboard();
+    void openSaveDialog();
 
 private:
     enum StackedWidgetPage { InfoLabel = 0, PromptLabel = 1, TextBrowser = 2 };

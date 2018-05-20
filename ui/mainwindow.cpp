@@ -6,6 +6,10 @@
 #include <QThreadPool>
 #include <QFontDatabase>
 #include <QElapsedTimer>
+#include <QClipboard>
+#include <QFileDialog>
+#include <QSaveFile>
+#include <QMessageBox>
 #include "shakeanimation.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -32,6 +36,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->stackedWidget, SIGNAL(dropActionAvailableChanged(bool)), this, SLOT(setDropActionAvailable(bool)));
     connect(ui->stackedWidget, SIGNAL(imageFileDropped(QUrl)), this, SLOT(loadImageFile(QUrl)));
+
+    connect(ui->copyButton, SIGNAL(clicked(bool)), this, SLOT(copyToClipboard()));
+    connect(ui->saveAsButton, SIGNAL(clicked(bool)), this, SLOT(openSaveDialog()));
 
     config.loadFromSettings();
 }
@@ -174,7 +181,7 @@ void MainWindow::loadImageFile(const QUrl &url)
     if (image.isNull()) {
         ShakeAnimation *shakeAnimation = new ShakeAnimation(ui->promptLabel);
         shakeAnimation->start(ShakeAnimation::DeleteWhenStopped);
-        ui->statusBar->showMessage(tr("Couldn't read image from provided file"), Qt::red, 5000);
+        ui->statusBar->showMessage(tr("Couldn't read image from provided file"), Qt::darkRed, 5000);
     } else {
         qDebug() << image.size();
         if (conversion and !conversion->isFinished()) {
@@ -214,9 +221,45 @@ void MainWindow::imageConverted(const QString &sourceCode, const ConverterError 
     } else {
         ShakeAnimation *shakeAnimation = new ShakeAnimation(ui->promptLabel);
         shakeAnimation->start(ShakeAnimation::DeleteWhenStopped);
-        ui->statusBar->showMessage(QString::fromStdString(error.description), Qt::red, 5000);
+        ui->statusBar->showMessage(QString::fromStdString(error.description), Qt::darkRed, 5000);
     }
 
     conversion = nullptr;
 }
 
+void MainWindow::copyToClipboard()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(ui->textBrowser->toPlainText());
+    ui->statusBar->showMessage(tr("Source code copied to clipboard."), 3000);
+}
+
+void MainWindow::openSaveDialog()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As..."), QDir::homePath());
+    QSaveFile *file = new QSaveFile(fileName);
+    if (!file->open(QFile::WriteOnly | QFile::Text)) {
+        QMessageBox::critical(this, tr("Save As"),
+                              tr("Couldn't access file at \"%1\": %2").arg(fileName, file->errorString()));
+        ui->statusBar->showMessage(tr("Failed to save source code to file."), Qt::darkRed, 5000);
+    } else {
+
+        bool writeSuccessful = file->write(ui->textBrowser->toPlainText().toUtf8()) != -1;
+
+        if (!writeSuccessful) {
+            QMessageBox::critical(this, tr("Save As"),
+                                  tr("Couldn't write to file at \"%1\": %2").arg(fileName, file->errorString()));
+            ui->statusBar->showMessage(tr("Failed to save source code to file."), Qt::darkRed, 5000);
+        }
+
+        bool saveSuccessful = file->commit();
+
+        if (saveSuccessful) {
+            ui->statusBar->showMessage(tr("Saved source code to file at \"%1\".").arg(fileName), Qt::darkGreen, 5000);
+        } else {
+            QMessageBox::critical(this, tr("Save As"),
+                                  tr("Couldn't save file at \"%1\": %2").arg(fileName, file->errorString()));
+            ui->statusBar->showMessage(tr("Failed to save source code to file."), Qt::darkRed, 5000);
+        }
+    }
+}
