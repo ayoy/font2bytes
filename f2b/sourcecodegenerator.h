@@ -26,9 +26,16 @@ public:
 
     inline std::string sourceCode() { return m_stream->str(); }
 
+    virtual void beginArrayRow() override;
+    virtual void addLineBreak() override;
+    virtual void end() override;
+
 protected:
     inline std::ostringstream &stream() { return *m_stream; }
     const SourceCodeOptions options;
+
+    std::string getCurrentTimestamp() const;
+    uint8_t formatByte(uint8_t byte) const;
 
 private:
     std::ostringstream *m_stream;
@@ -44,9 +51,7 @@ public:
     virtual void beginArray(const std::string &name) override;
     virtual void writeByte(uint8_t byte) override;
     virtual void addComment(const std::string &comment) override;
-    virtual void addLineBreak() override;
     virtual void endArray() override;
-    virtual void end() override;
 };
 
 
@@ -57,6 +62,32 @@ public:
 
     virtual void begin() override;
     virtual void beginArray(const std::string &name) override;
+};
+
+
+class PythonListCodeGenerator : public SourceCodeGenerator
+{
+public:
+    PythonListCodeGenerator(const SourceCodeOptions &options);
+
+    virtual void begin() override;
+    virtual void beginArray(const std::string &name) override;
+    virtual void writeByte(uint8_t byte) override;
+    virtual void addComment(const std::string &comment) override;
+    virtual void endArray() override;
+};
+
+class PythonBytesCodeGenerator : public SourceCodeGenerator
+{
+public:
+    PythonBytesCodeGenerator(const SourceCodeOptions &options);
+
+    virtual void begin() override;
+    virtual void beginArray(const std::string &name) override;
+    virtual void beginArrayRow() override;
+    virtual void writeByte(uint8_t byte) override;
+    virtual void addComment(const std::string &comment) override;
+    virtual void endArray() override;
 };
 
 #endif // SOURCECODEGENERATOR_H

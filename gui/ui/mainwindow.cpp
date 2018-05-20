@@ -73,6 +73,22 @@ void MainWindow::setupSourceCodeGenerators()
     };
     generators << arduinoGenerator;
 
+    SourceCodeGeneratorItem pythonListGenerator;
+    pythonListGenerator.title = tr("Python List");
+    pythonListGenerator.createGenerator = [this]() {
+        SourceCodeOptions options = { this->config.bitNumbering, this->config.shouldInvertBits };
+        return new PythonListCodeGenerator(options);
+    };
+    generators << pythonListGenerator;
+
+    SourceCodeGeneratorItem pythonBytesGenerator;
+    pythonBytesGenerator.title = tr("Python Bytes");
+    pythonBytesGenerator.createGenerator = [this]() {
+        SourceCodeOptions options = { this->config.bitNumbering, this->config.shouldInvertBits };
+        return new PythonBytesCodeGenerator(options);
+    };
+    generators << pythonBytesGenerator;
+
     for (auto generatorItem : generators) {
         ui->formatComboBox->addItem(generatorItem.title);
     }

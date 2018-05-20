@@ -15,30 +15,18 @@ SourceCodeGenerator::~SourceCodeGenerator()
     }
 }
 
-CCodeGenerator::CCodeGenerator(const SourceCodeOptions &options) :
-    SourceCodeGenerator(options)
+std::string SourceCodeGenerator::getCurrentTimestamp() const
 {
-}
-
-void CCodeGenerator::begin()
-{
-    stream().flush();
-
     time_t     now = time(0);
     struct tm  tstruct;
     char       buf[22];
     tstruct = *localtime(&now);
     strftime(buf, sizeof(buf), "%d/%m/%Y at %H:%M:%S", &tstruct);
 
-    stream() << "//\n// Font Data\n// Created: " << buf << "\n//\n";
+    return buf;
 }
 
-void CCodeGenerator::beginArray(const std::string &name)
-{
-    stream() << "\n\nconst unsigned char " << name << "[] = {\n\t";
-}
-
-void CCodeGenerator::writeByte(uint8_t byte)
+uint8_t SourceCodeGenerator::formatByte(uint8_t byte) const
 {
     if (options.bitNumbering == SourceCodeOptions::MSB) {
         uint8_t reversedByte = 0;
@@ -53,32 +41,60 @@ void CCodeGenerator::writeByte(uint8_t byte)
     if (options.shouldInvertBits) {
         byte = ~byte;
     }
+    return byte;
+}
+
+void SourceCodeGenerator::beginArrayRow()
+{
+    stream() << "\t";
+}
+
+void SourceCodeGenerator::addLineBreak()
+{
+    stream() << "\n";
+}
+
+void SourceCodeGenerator::end()
+{
+    stream() << "\n\n";
+}
+
+
+CCodeGenerator::CCodeGenerator(const SourceCodeOptions &options) :
+    SourceCodeGenerator(options)
+{
+}
+
+void CCodeGenerator::begin()
+{
+    stream().flush();
+    stream() << "//\n// Font Data\n// Created: " << getCurrentTimestamp() << "\n//\n";
+}
+
+void CCodeGenerator::beginArray(const std::string &name)
+{
+    stream() << "\n\nconst unsigned char " << name << "[] = {\n";
+}
+
+void CCodeGenerator::writeByte(uint8_t byte)
+{
+    uint8_t formattedByte = formatByte(byte);
 
     auto format = "0x%02X,";
     std::string byteString(5, '\0');
-    std::sprintf(&byteString[0], format, byte);
+    std::sprintf(&byteString[0], format, formattedByte);
 
     stream() << byteString;
 }
 
 void CCodeGenerator::addComment(const std::string &comment)
 {
-    stream() << " // " << comment << "\n\t";
-}
-
-void CCodeGenerator::addLineBreak()
-{
-    stream() << "\n\t";
+    stream() << " // " << comment;
 }
 
 void CCodeGenerator::endArray()
 {
-    stream() << "\n};\n";
-}
-
-void CCodeGenerator::end()
-{
-    stream() << "\n\n";
+    stream() << "};\n";
 }
 
 
@@ -95,5 +111,86 @@ void ArduinoCodeGenerator::begin()
 
 void ArduinoCodeGenerator::beginArray(const std::string &name)
 {
-    stream() << "\n\nconst uint8_t " << name << "[] PROGMEM = {\n\t";
+    stream() << "\n\nconst uint8_t " << name << "[] PROGMEM = {\n";
+}
+
+
+PythonListCodeGenerator::PythonListCodeGenerator(const SourceCodeOptions &options) :
+    SourceCodeGenerator(options)
+{
+}
+
+void PythonListCodeGenerator::begin()
+{
+    stream().flush();
+    stream() << "#\n# Font Data\n# Created: " << getCurrentTimestamp() << "\n#\n";
+}
+
+void PythonListCodeGenerator::beginArray(const std::string &name)
+{
+    stream() << "\n\n" << name << " = [\n";
+}
+
+void PythonListCodeGenerator::writeByte(uint8_t byte)
+{
+    uint8_t formattedByte = formatByte(byte);
+
+    auto format = "0x%02X,";
+    std::string byteString(5, '\0');
+    std::sprintf(&byteString[0], format, formattedByte);
+
+    stream() << byteString;
+}
+
+void PythonListCodeGenerator::addComment(const std::string &comment)
+{
+    stream() << " # " << comment;
+}
+
+void PythonListCodeGenerator::endArray()
+{
+    stream() << "\n]\n";
+}
+
+
+PythonBytesCodeGenerator::PythonBytesCodeGenerator(const SourceCodeOptions &options) :
+    SourceCodeGenerator(options)
+{
+}
+
+void PythonBytesCodeGenerator::begin()
+{
+    stream().flush();
+    stream() << "#\n# Font Data\n# Created: " << getCurrentTimestamp() << "\n#\n";
+}
+
+void PythonBytesCodeGenerator::beginArray(const std::string &name)
+{
+    stream() << "\n\n" << name << " = b'' \\\n";
+}
+
+void PythonBytesCodeGenerator::beginArrayRow()
+{
+    stream() << "\t'";
+}
+
+void PythonBytesCodeGenerator::writeByte(uint8_t byte)
+{
+    uint8_t formattedByte = formatByte(byte);
+
+    auto format = "\\x%02X";
+    std::string byteString(4, '\0');
+    std::sprintf(&byteString[0], format, formattedByte);
+
+    stream() << byteString;
+}
+
+void PythonBytesCodeGenerator::addComment(const std::string &comment)
+{
+    (void)comment;
+    stream() << "' \\";
+}
+
+void PythonBytesCodeGenerator::endArray()
+{
 }

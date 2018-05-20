@@ -24,13 +24,18 @@ public:
     virtual void beginArray(const std::string &name) = 0;
 
     /**
+     * @brief Start a new row of array of bytes
+     */
+    virtual void beginArrayRow() = 0;
+
+    /**
      * @brief Write a single byte to the output array
      * @param byte
      */
     virtual void writeByte(uint8_t byte) = 0;
 
     /**
-     * @brief Add a comment followed by a linebrak to the output
+     * @brief Add a comment to the output
      * @param comment
      */
     virtual void addComment(const std::string &comment) = 0;
