@@ -381,7 +381,7 @@ PNG file here!</string>
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="ColoredStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -410,6 +410,11 @@ PNG file here!</string>
    <class>PromptLabel</class>
    <extends>QLabel</extends>
    <header>promptlabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ColoredStatusBar</class>
+   <extends>QStatusBar</extends>
+   <header>coloredstatusbar.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

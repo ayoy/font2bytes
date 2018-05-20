@@ -174,7 +174,7 @@ void MainWindow::loadImageFile(const QUrl &url)
     if (image.isNull()) {
         ShakeAnimation *shakeAnimation = new ShakeAnimation(ui->promptLabel);
         shakeAnimation->start(ShakeAnimation::DeleteWhenStopped);
-        statusBar()->showMessage(tr("Couldn't read image from provided file"), 5000);
+        ui->statusBar->showMessage(tr("Couldn't read image from provided file"), Qt::red, 5000);
     } else {
         qDebug() << image.size();
         if (conversion and !conversion->isFinished()) {
@@ -201,23 +201,22 @@ void MainWindow::imageConverted(const QString &sourceCode, const ConverterError 
 {
     qint64 conversionTime = conversionTimer.elapsed();
     conversionTimer.invalidate();
-    ui->statusBar->showMessage(tr("%1x%2 font generated in %3ms")
-                               .arg(QString::number(config.fontHeight),
-                                    QString::number(config.fontWidth),
-                                    QString::number(conversionTime)));
     Q_ASSERT(conversion->isFinished());
     qDebug() << __PRETTY_FUNCTION__;
     if (error == ConverterError::NoError) {
+        ui->statusBar->showMessage(tr("%1x%2 font generated in %3ms")
+                                   .arg(QString::number(config.fontHeight),
+                                        QString::number(config.fontWidth),
+                                        QString::number(conversionTime)));
+
         ui->stackedWidget->setCurrentIndex(TextBrowser);
         ui->textBrowser->setText(sourceCode);
     } else {
         ShakeAnimation *shakeAnimation = new ShakeAnimation(ui->promptLabel);
         shakeAnimation->start(ShakeAnimation::DeleteWhenStopped);
-        statusBar()->showMessage(QString::fromStdString(error.description), 5000);
-        QPalette palette = statusBar()->palette();
-        palette.setColor(QPalette::WindowText, Qt::red);
-        statusBar()->setPalette(palette);
+        ui->statusBar->showMessage(QString::fromStdString(error.description), Qt::red, 5000);
     }
 
     conversion = nullptr;
 }
+

@@ -37,7 +37,8 @@ SOURCES += \
     lib/fixedconverter.cpp \
     lib/convertererror.cpp \
     ui/promptlabel.cpp \
-    ui/shakeanimation.cpp
+    ui/shakeanimation.cpp \
+    ui/coloredstatusbar.cpp
 
 HEADERS += \
     ui/mainwindow.h \
@@ -54,7 +55,8 @@ HEADERS += \
     lib/fixedconverter.h \
     lib/convertererror.h \
     ui/promptlabel.h \
-    ui/shakeanimation.h
+    ui/shakeanimation.h \
+    ui/coloredstatusbar.h
 
 FORMS += \
         ui/mainwindow.ui
