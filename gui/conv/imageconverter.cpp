@@ -1,6 +1,4 @@
 #include "imageconverter.h"
-#include "fixedconverter.h"
-#include "inputqimage.h"
 #include <functional>
 
 ImageConverter::ImageConverter(QObject *parent) : QObject(parent)

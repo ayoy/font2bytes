@@ -2,8 +2,7 @@
 #define CONVERSIONCONFIG_H
 
 #include <cstdint>
-#include "sourcecodegenerator.h"
-#include "fontconverter.h"
+#include <f2b.h>
 
 struct ConversionConfig
 {

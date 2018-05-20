@@ -34,7 +34,8 @@ HEADERS += \
     fixedconverter.h \
     fontconverter.h \
     inputimage.h \
-    sourcecodegenerator.h
+    sourcecodegenerator.h \
+    f2b.h
 
 unix {
     target.path = /usr/lib

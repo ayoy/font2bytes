@@ -3,10 +3,9 @@
 
 #include <QObject>
 #include <QImage>
-#include "convertererror.h"
-#include "conversionconfig.h"
-#include "bytewriter.h"
+#include <f2b.h>
 #include "inputqimage.h"
+#include "conversionconfig.h"
 
 class ImageConverter : public QObject
 {

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "conversionrunnable.h"
-#include "sourcecodegenerator.h"
+#include <f2b.h>
 #include <QDebug>
 #include <QThreadPool>
 #include <QFontDatabase>

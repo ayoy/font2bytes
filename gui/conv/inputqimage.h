@@ -1,7 +1,7 @@
 #ifndef INPUTQIMAGE_H
 #define INPUTQIMAGE_H
 
-#include "inputimage.h"
+#include <f2b.h>
 #include <QImage>
 
 class InputQImage : public InputImage
