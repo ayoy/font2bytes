@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(cli)
+project(font2bytes)
 
 set(CMAKE_CXX_STANDARD 11)
 
