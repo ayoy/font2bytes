@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <unistd.h>
 #include "png_read.h"
 #include "inputpngimage.h"
@@ -19,9 +20,19 @@ struct SourceCodeGeneratorItem {
     GeneratorLambda createGenerator;
 };
 
+struct Config {
+    bool fontWidthProvided { false };
+    bool fontHeightProvided { false };
+    uint8_t fontHeight { 0 };
+    uint8_t fontWidth { 0 };
+    SourceCodeOptions options;
+    std::string generatorIdentifier  { CCodeGenerator::identifier };
+    char *outputFilePath { nullptr };
+    char *inputFilePath { nullptr };
+};
 
 void printUsage(char *programName) {
-    std::cerr << "Usage: " << programName << " -h font_height -w font_width [-i] [-L|-M] "
+    std::cerr << "Usage: " << programName << " -h font_height -w font_width [-i] [-l|-m] "
               << "[-f output_format] path_to_image [-o path_to_output_file]" << std::endl
               << std::endl
               << "Required arguments:" << std::endl
@@ -36,20 +47,60 @@ void printUsage(char *programName) {
               << "  -o\tpath to output file (if not provided, code outputs to stdout)" << std::endl
               << std::endl
               << "Available output formats:" << std::endl
-              << "  " << CCodeGenerator::identifier << "\t- " << CCodeGenerator::description << std::endl
-              << "  " << ArduinoCodeGenerator::identifier << "\t- " << ArduinoCodeGenerator::description << std::endl
-              << "  " << PythonListCodeGenerator::identifier << "\t- " << PythonListCodeGenerator::description << std::endl
-              << "  " << PythonBytesCodeGenerator::identifier << "\t- " << PythonBytesCodeGenerator::description << std::endl;
+              << "  " << CCodeGenerator::identifier << "\t\t- " << CCodeGenerator::description << std::endl
+              << "  " << ArduinoCodeGenerator::identifier << "\t\t- " << ArduinoCodeGenerator::description << std::endl
+              << "  " << PythonListCodeGenerator::identifier << "\t\t- " << PythonListCodeGenerator::description << std::endl
+              << "  " << PythonBytesCodeGenerator::identifier << "\t\t- " << PythonBytesCodeGenerator::description << std::endl;
+}
+
+void parseOpts(int argc, char *argv[], Config &config) {
+    int opt;
+    while ((opt = getopt(argc, argv, "w:h:f:ilmo:")) != -1) {
+        switch (opt) {
+        case 'w':
+            config.fontWidthProvided = true;
+            config.fontWidth = atoi(optarg);
+            break;
+        case 'h':
+            config.fontHeightProvided = true;
+            config.fontHeight = atoi(optarg);
+            break;
+        case 'i':
+            config.options.shouldInvertBits = true;
+            break;
+        case 'l':
+            config.options.bitNumbering = SourceCodeOptions::LSB;
+            break;
+        case 'm':
+            config.options.bitNumbering = SourceCodeOptions::MSB;
+            break;
+        case 'f':
+            config.generatorIdentifier = std::string(optarg);
+            break;
+        case 'o':
+            config.outputFilePath = optarg;
+            break;
+        default: /* '?' */
+            printUsage(argv[0]);
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+void parseCommandLineArguments(int argc, char *argv[], Config &config) {
+    parseOpts(argc, argv, config);
+    if (optind < argc) {
+        config.inputFilePath = argv[optind];
+        optind += 1;
+    }
+    parseOpts(argc, argv, config);
 }
 
 
-int main(int argc, char *argv[]) {
-    int opt;
-    bool fontWidthProvided = false, fontHeightProvided = false;
-    uint8_t fontHeight = 0, fontWidth = 0;
 
-    SourceCodeOptions options;
-    std::string generatorIdentifier = CCodeGenerator::identifier;
+int main(int argc, char *argv[]) {
+    Config config;
+
     std::map<std::string, GeneratorLambda> generators;
 
     generators.insert(
@@ -73,35 +124,9 @@ int main(int argc, char *argv[]) {
                     [](const SourceCodeOptions &options) { return new PythonBytesCodeGenerator(options); })
             );
 
-    while ((opt = getopt(argc, argv, "w:h:f:ilm")) != -1) {
-        switch (opt) {
-        case 'w':
-            fontWidthProvided = true;
-            fontWidth = atoi(optarg);
-            break;
-        case 'h':
-            fontHeightProvided = true;
-            fontHeight = atoi(optarg);
-            break;
-        case 'i':
-            options.shouldInvertBits = true;
-            break;
-        case 'l':
-            options.bitNumbering = SourceCodeOptions::LSB;
-            break;
-        case 'm':
-            options.bitNumbering = SourceCodeOptions::MSB;
-            break;
-        case 'f':
-            generatorIdentifier = std::string(optarg);
-            break;
-        default: /* '?' */
-            printUsage(argv[0]);
-            exit(EXIT_FAILURE);
-        }
-    }
+    parseCommandLineArguments(argc, argv, config);
 
-    if (!fontHeightProvided || fontHeight == 0) {
+    if (!config.fontHeightProvided || config.fontHeight == 0) {
         std::cerr << std::endl
                   << "Font height not provided or invalid" << std::endl
                   << std::endl;
@@ -109,7 +134,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    if (!fontWidthProvided || fontWidth == 0) {
+    if (!config.fontWidthProvided || config.fontWidth == 0) {
         std::cerr << std::endl
                   << "Font width not provided or invalid" << std::endl
                   << std::endl;
@@ -119,31 +144,40 @@ int main(int argc, char *argv[]) {
 
     SourceCodeGenerator *generator = nullptr;
 
-    auto it = generators.find(generatorIdentifier);
+    auto it = generators.find(config.generatorIdentifier);
     if (it != generators.end()) {
-        generator = (*it).second(options);
+        generator = (*it).second(config.options);
     } else {
-        generator = new CCodeGenerator(options);
+        generator = new CCodeGenerator(config.options);
     }
 
-//    if (optind < argc) {
-//        std::cout << "path: " << argv[optind] << std::endl;
-//    }
-
-    png_data *imageData = png_data_create(argv[optind]);
+    png_data *imageData = png_data_create(config.inputFilePath);
     InputPNGImage inputImage(imageData);
 
-    FixedConverter converter(fontWidth, fontHeight, FixedConverter::TopToBottom);
+    FixedConverter converter(config.fontWidth, config.fontHeight, FixedConverter::TopToBottom);
     ConverterError error = converter.convert(inputImage, generator);
 
     if (error != ConverterError::NoError) {
-        std::cout << "Error while converting image: "
+        std::cerr << "Error while converting image: "
                   << error.summary << " (" << error.description << ")"
                   << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    std::cout << generator->sourceCode();
+    if (config.outputFilePath) {
+        std::fstream file;
+        file.open(config.outputFilePath, std::fstream::out);
+        if (file.rdstate() == std::fstream::failbit) {
+            std::cerr << "Failed to write to file at " << config.outputFilePath << std::endl;
+            exit(EXIT_FAILURE);
+        } else {
+            file << generator->sourceCode();
+            file.close();
+            std::cout << "Successfully wrote source code to " << config.outputFilePath << std::endl;
+        }
+    } else {
+        std::cout << generator->sourceCode();
+    }
 
     delete generator;
 
