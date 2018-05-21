@@ -8,6 +8,8 @@ struct SourceCodeOptions
 {
     enum BitNumbering { LSB, MSB };
 
+
+    SourceCodeOptions() {}
     SourceCodeOptions(BitNumbering bitNumbering, bool shouldInvertBits) :
         bitNumbering(bitNumbering),
         shouldInvertBits(shouldInvertBits)
@@ -45,6 +47,9 @@ private:
 class CCodeGenerator : public SourceCodeGenerator
 {
 public:
+    static const std::string identifier;
+    static const std::string description;
+
     CCodeGenerator(const SourceCodeOptions &options);
 
     virtual void begin() override;
@@ -58,6 +63,9 @@ public:
 class ArduinoCodeGenerator : public CCodeGenerator
 {
 public:
+    static const std::string identifier;
+    static const std::string description;
+
     ArduinoCodeGenerator(const SourceCodeOptions &options);
 
     virtual void begin() override;
@@ -68,6 +76,9 @@ public:
 class PythonListCodeGenerator : public SourceCodeGenerator
 {
 public:
+    static const std::string identifier;
+    static const std::string description;
+
     PythonListCodeGenerator(const SourceCodeOptions &options);
 
     virtual void begin() override;
@@ -80,6 +91,9 @@ public:
 class PythonBytesCodeGenerator : public SourceCodeGenerator
 {
 public:
+    static const std::string identifier;
+    static const std::string description;
+
     PythonBytesCodeGenerator(const SourceCodeOptions &options);
 
     virtual void begin() override;

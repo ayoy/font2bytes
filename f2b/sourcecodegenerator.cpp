@@ -60,6 +60,9 @@ void SourceCodeGenerator::end()
 }
 
 
+const std::string CCodeGenerator::identifier = "c";
+const std::string CCodeGenerator::description = "C/C++ unsigned char array";
+
 CCodeGenerator::CCodeGenerator(const SourceCodeOptions &options) :
     SourceCodeGenerator(options)
 {
@@ -98,6 +101,9 @@ void CCodeGenerator::endArray()
 }
 
 
+const std::string ArduinoCodeGenerator::identifier = "arduino";
+const std::string ArduinoCodeGenerator::description = "Arduino-compatible array";
+
 ArduinoCodeGenerator::ArduinoCodeGenerator(const SourceCodeOptions &options) :
     CCodeGenerator(options)
 {
@@ -114,6 +120,9 @@ void ArduinoCodeGenerator::beginArray(const std::string &name)
     stream() << "\n\nconst uint8_t " << name << "[] PROGMEM = {\n";
 }
 
+
+const std::string PythonListCodeGenerator::identifier = "pylist";
+const std::string PythonListCodeGenerator::description = "Python list";
 
 PythonListCodeGenerator::PythonListCodeGenerator(const SourceCodeOptions &options) :
     SourceCodeGenerator(options)
@@ -152,6 +161,9 @@ void PythonListCodeGenerator::endArray()
     stream() << "\n]\n";
 }
 
+
+const std::string PythonBytesCodeGenerator::identifier = "pybytes";
+const std::string PythonBytesCodeGenerator::description = "Python bytes object";
 
 PythonBytesCodeGenerator::PythonBytesCodeGenerator(const SourceCodeOptions &options) :
     SourceCodeGenerator(options)
