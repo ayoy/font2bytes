@@ -13,6 +13,7 @@ DEPENDPATH += $$PWD/../f2b
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../f2b/release/ -lf2b
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../f2b/debug/ -lf2b
+else:macx: LIBS += -L$${TARGET}.app/Contents/Frameworks -lf2b
 else:unix: LIBS += -L$$OUT_PWD/../f2b/ -lf2b
 
 SOURCES += \
