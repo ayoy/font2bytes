@@ -1,12 +1,8 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.9)
 
 set(CMAKE_CXX_STANDARD 11)
 
-project(f2b)
-
-find_package(PNG REQUIRED)
-include_directories(.
-        ${PNG_INCLUDE_DIR})
+project(font2bytes)
 
 set(TARGET)
 
@@ -19,7 +15,9 @@ add_library(${PROJECT_NAME} SHARED
         sourcecodegenerator.cpp)
 
 target_link_libraries(${PROJECT_NAME} png)
-target_include_directories (${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${PNG_INCLUDE_DIR})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         SOVERSION 1.0.0)

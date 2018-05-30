@@ -1,18 +1,19 @@
-cmake_minimum_required(VERSION 3.10)
-project(font2bytes)
+cmake_minimum_required(VERSION 3.9)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(.)
+set(TARGET f2b)
 
-add_executable(${PROJECT_NAME}
+add_executable(${TARGET}
         inputpngimage.cpp
         inputpngimage.h
         main.cpp
         png_read.c
         png_read.h)
 
-target_link_libraries (${PROJECT_NAME} LINK_PUBLIC f2b)
+target_include_directories(${TARGET} PRIVATE .)
+target_link_libraries (${TARGET} LINK_PUBLIC font2bytes)
+set_target_properties(${TARGET} PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 
-INSTALL(TARGETS ${PROJECT_NAME}
+INSTALL(TARGETS ${TARGET}
         RUNTIME DESTINATION bin)

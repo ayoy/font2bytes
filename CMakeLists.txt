@@ -1,5 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.9)
 project(FontToBytes)
+
+find_package(PNG)
 
 add_subdirectory(f2b)
 add_subdirectory(cli)
