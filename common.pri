@@ -1,7 +1,8 @@
-isEmpty(GUI_PRI) {
-    GUI_PRI = 1
+isEmpty(COMMON_PRI) {
+    COMMON_PRI = 1
 
     TOP = $${PWD}
+    GUI_TARGET = font2bytes
 
     isEmpty( PREFIX ):INSTALL_PREFIX = /usr/local
     else:INSTALL_PREFIX = $${PREFIX}

@@ -2,11 +2,13 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = font2bytes
+include(../common.pri)
+
+TARGET = $${GUI_TARGET}
 TEMPLATE = app
 VERSION = 1.0.0
 
-include(../common.pri)
+
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
@@ -15,7 +17,7 @@ DEPENDPATH += $$PWD/../f2b
 
 win32:CONFIG(release, debug|release): LIBS += -L$${DESTDIR}/release/ -lf2b
 else:win32:CONFIG(debug, debug|release): LIBS += -L$${DESTDIR}/debug/ -lf2b
-else:macx: LIBS += -L$${TARGET}.app/Contents/Frameworks -lf2b
+else:macx: LIBS += -L$${DESTDIR}/$${TARGET}.app/Contents/Frameworks -lf2b
 else:unix {
     LIBS += -L$${DESTDIR} -lf2b
     QMAKE_LFLAGS += -Wl,-rpath,$${INSTALL_PREFIX}/lib$${LIB_SUFFIX}:.
