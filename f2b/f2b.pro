@@ -14,13 +14,19 @@ DEFINES += F2B_LIBRARY
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
+include(../common.pri)
+
 # GUI=1 is set by .qmake.cache.in in top-level dir
 # It's loaded only by the GUI project, with no effect
 # on the CLI build
+message($${INSTALL_PREFIX})
 macx: equals(GUI, "1"): {
     LIBS += -install_name \
             @executable_path/../Frameworks/lib$${TARGET}.$${VERSION}.dylib
     DESTDIR = ../gui/FontToBytes.app/Contents/Frameworks
+} else: unix {
+    target.path = $${INSTALL_PREFIX}/lib$${LIB_SUFFIX}
+    INSTALLS += target
 }
 
 SOURCES += \

@@ -3,7 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-TARGET = font2bytes
+TARGET = f2b
 
 macx: {
     LIBS += -L/usr/local/lib -lpng -L$$OUT_PWD/../f2b -lf2b
