@@ -6,7 +6,7 @@
 
 QT       -= core gui
 
-TARGET = f2b
+TARGET = font2bytes
 TEMPLATE = lib
 VERSION = 1.0.0
 

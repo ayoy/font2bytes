@@ -15,12 +15,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += $$PWD/../f2b ui conv
 DEPENDPATH += $$PWD/../f2b
 
-win32:CONFIG(release, debug|release): LIBS += -L$${DESTDIR}/release/ -lf2b
-else:win32:CONFIG(debug, debug|release): LIBS += -L$${DESTDIR}/debug/ -lf2b
-else:macx: LIBS += -L$${DESTDIR}/$${TARGET}.app/Contents/Frameworks -lf2b
+F2B_LIB = font2bytes
+
+win32:CONFIG(release, debug|release): LIBS += -L$${DESTDIR}/release/ -l$${F2B_LIB}
+else:win32:CONFIG(debug, debug|release): LIBS += -L$${DESTDIR}/debug/ -l$${F2B_LIB}
+else:macx: LIBS += -L$${DESTDIR}/$${TARGET}.app/Contents/Frameworks -l$${F2B_LIB}
 else:unix {
-    LIBS += -L$${DESTDIR} -lf2b
-    QMAKE_LFLAGS += -Wl,-rpath,$${INSTALL_PREFIX}/lib$${LIB_SUFFIX}:.
+    LIBS += -L$${DESTDIR} -l$${F2B_LIB}
+    QMAKE_LFLAGS += -Wl,-rpath,.:$${INSTALL_PREFIX}/lib$${LIB_SUFFIX}
 }
 
 SOURCES += \
