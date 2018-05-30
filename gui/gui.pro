@@ -13,10 +13,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += $$PWD/../f2b ui conv
 DEPENDPATH += $$PWD/../f2b
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../f2b/release/ -lf2b
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../f2b/debug/ -lf2b
+win32:CONFIG(release, debug|release): LIBS += -L$${DESTDIR}/release/ -lf2b
+else:win32:CONFIG(debug, debug|release): LIBS += -L$${DESTDIR}/debug/ -lf2b
 else:macx: LIBS += -L$${TARGET}.app/Contents/Frameworks -lf2b
-else:unix: LIBS += -L$$OUT_PWD/../f2b/ -lf2b
+else:unix {
+    LIBS += -L$${DESTDIR} -lf2b
+    QMAKE_LFLAGS += -Wl,-rpath,$${INSTALL_PREFIX}/lib$${LIB_SUFFIX}:.
+}
 
 SOURCES += \
     main.cpp \
@@ -48,6 +51,7 @@ FORMS += \
 
 macx: ICON = macx/font2bytes.icns
 else:unix: {
+    target.path = $${INSTALL_PREFIX}/bin
     icons16.path = $${INSTALL_PREFIX}/share/icons/hicolor/16x16/apps
     icons16.files = x11/icons/16x16/font2bytes.png
     icons22.path = $${INSTALL_PREFIX}/share/icons/hicolor/22x22/apps
@@ -65,7 +69,6 @@ else:unix: {
     desktop.path = $${INSTALL_PREFIX}/share/applications
     desktop.files = x11/font2bytes.desktop
     INSTALLS += target \
-        icons \
         icons16 \
         icons22 \
         icons32 \

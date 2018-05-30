@@ -1,10 +1,9 @@
 [Desktop Entry]
 Exec=font2bytes
-Name=font2bytes
+Name=Font2Bytes
 Icon=font2bytes
 Type=Application
 Categories=Qt;Development;
 Comment=Font image to bytes converter
-GenericName=font2bytes
+GenericName=Font to Source Code Converter
 Terminal=false
-X-KDE-StartupNotify=false
