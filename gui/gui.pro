@@ -82,3 +82,6 @@ else:unix: {
         icons256 \
         desktop
 }
+
+RESOURCES += \
+    assets.qrc

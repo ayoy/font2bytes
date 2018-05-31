@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="appIcon">x11/icons/48x48/font2bytes.png</file>
+    </qresource>
+</RCC>

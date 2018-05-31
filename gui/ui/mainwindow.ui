@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>FontToBytes</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../assets.qrc">
+    <normaloff>:/appIcon</normaloff>:/appIcon</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
     <property name="spacing">
@@ -113,7 +117,7 @@
           <item>
            <widget class="QRadioButton" name="leftRightRadioButton">
             <property name="text">
-             <string>Left-Right</string>
+             <string>&amp;Left-Right</string>
             </property>
            </widget>
           </item>
@@ -279,7 +283,7 @@
      <widget class="DroppableStackedWidget" name="stackedWidget">
       <property name="minimumSize">
        <size>
-        <width>450</width>
+        <width>480</width>
         <height>302</height>
        </size>
       </property>
@@ -388,7 +392,7 @@ PNG file here!</string>
      <x>0</x>
      <y>0</y>
      <width>865</width>
-     <height>22</height>
+     <height>30</height>
     </rect>
    </property>
   </widget>
@@ -429,6 +433,8 @@ PNG file here!</string>
   <tabstop>copyButton</tabstop>
   <tabstop>saveAsButton</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../assets.qrc"/>
+ </resources>
  <connections/>
 </ui>
