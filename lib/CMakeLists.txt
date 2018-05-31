@@ -20,7 +20,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 	${PNG_INCLUDE_DIR})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-        SOVERSION 1.0.0)
+        SOVERSION 1.0.0
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 INSTALL(FILES ${headers} DESTINATION include/f2b)
 INSTALL(FILES include/f2b.h DESTINATION include)

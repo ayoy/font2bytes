@@ -12,8 +12,8 @@ VERSION = 1.0.0
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-INCLUDEPATH += $$PWD/../f2b ui conv
-DEPENDPATH += $$PWD/../f2b
+INCLUDEPATH += $$PWD/../lib ui conv
+DEPENDPATH += $$PWD/../lib
 
 F2B_LIB = font2bytes
 
@@ -22,7 +22,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$${DESTDIR}/debug/ -l$${F2B_L
 else:macx: LIBS += -L$${DESTDIR}/$${TARGET}.app/Contents/Frameworks -l$${F2B_LIB}
 else:unix {
     LIBS += -L$${DESTDIR} -l$${F2B_LIB}
-    QMAKE_LFLAGS += -Wl,-rpath,.:$${INSTALL_PREFIX}/lib$${LIB_SUFFIX}
+    QMAKE_LFLAGS += -Wl,-rpath,.:build:$${INSTALL_PREFIX}/lib$${LIB_SUFFIX}
 }
 
 SOURCES += \

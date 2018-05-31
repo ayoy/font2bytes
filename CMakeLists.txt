@@ -3,7 +3,7 @@ project(FontToBytes)
 
 find_package(PNG)
 
-add_subdirectory(f2b)
+add_subdirectory(lib)
 add_subdirectory(cli)
 
 # uninstall target

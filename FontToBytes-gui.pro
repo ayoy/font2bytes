@@ -12,5 +12,5 @@ unix: !mac {
 }
 
 SUBDIRS = \
-    f2b \
+    lib \
     gui

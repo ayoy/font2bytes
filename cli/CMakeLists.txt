@@ -13,7 +13,9 @@ add_executable(${TARGET}
 
 target_include_directories(${TARGET} PRIVATE .)
 target_link_libraries (${TARGET} LINK_PUBLIC font2bytes)
-set_target_properties(${TARGET} PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+set_target_properties(${TARGET} PROPERTIES 
+        INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 INSTALL(TARGETS ${TARGET}
         RUNTIME DESTINATION bin)
