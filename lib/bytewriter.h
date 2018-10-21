@@ -21,7 +21,7 @@ public:
      * @brief Start a new array of bytes
      * @param name The name of the array.
      */
-    virtual void beginArray(const std::string &name) = 0;
+    virtual void beginArray(std::string name) = 0;
 
     /**
      * @brief Start a new row of array of bytes
@@ -38,7 +38,7 @@ public:
      * @brief Add a comment to the output
      * @param comment
      */
-    virtual void addComment(const std::string &comment) = 0;
+    virtual void addComment(std::string comment) = 0;
 
     /**
     * @brief Add a linebreak to the output

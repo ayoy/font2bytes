@@ -74,9 +74,9 @@ void CCodeGenerator::begin()
     stream() << "//\n// Font Data\n// Created: " << getCurrentTimestamp() << "\n//\n";
 }
 
-void CCodeGenerator::beginArray(const std::string &name)
+void CCodeGenerator::beginArray(std::string name)
 {
-    stream() << "\n\nconst unsigned char " << name << "[] = {\n";
+    stream() << "\n\nconst unsigned char " << std::move(name) << "[] = {\n";
 }
 
 void CCodeGenerator::writeByte(uint8_t byte)
@@ -90,9 +90,9 @@ void CCodeGenerator::writeByte(uint8_t byte)
     stream() << byteString;
 }
 
-void CCodeGenerator::addComment(const std::string &comment)
+void CCodeGenerator::addComment(std::string comment)
 {
-    stream() << " // " << comment;
+    stream() << " // " << std::move(comment);
 }
 
 void CCodeGenerator::endArray()
@@ -115,9 +115,9 @@ void ArduinoCodeGenerator::begin()
     stream() << "\n#include <Arduino.h>\n";
 }
 
-void ArduinoCodeGenerator::beginArray(const std::string &name)
+void ArduinoCodeGenerator::beginArray(std::string name)
 {
-    stream() << "\n\nconst uint8_t " << name << "[] PROGMEM = {\n";
+    stream() << "\n\nconst uint8_t " << std::move(name) << "[] PROGMEM = {\n";
 }
 
 
@@ -135,9 +135,9 @@ void PythonListCodeGenerator::begin()
     stream() << "#\n# Font Data\n# Created: " << getCurrentTimestamp() << "\n#\n";
 }
 
-void PythonListCodeGenerator::beginArray(const std::string &name)
+void PythonListCodeGenerator::beginArray(std::string name)
 {
-    stream() << "\n\n" << name << " = [\n";
+    stream() << "\n\n" << std::move(name) << " = [\n";
 }
 
 void PythonListCodeGenerator::writeByte(uint8_t byte)
@@ -151,9 +151,9 @@ void PythonListCodeGenerator::writeByte(uint8_t byte)
     stream() << byteString;
 }
 
-void PythonListCodeGenerator::addComment(const std::string &comment)
+void PythonListCodeGenerator::addComment(std::string comment)
 {
-    stream() << " # " << comment;
+    stream() << " # " << std::move(comment);
 }
 
 void PythonListCodeGenerator::endArray()
@@ -176,9 +176,9 @@ void PythonBytesCodeGenerator::begin()
     stream() << "#\n# Font Data\n# Created: " << getCurrentTimestamp() << "\n#\n";
 }
 
-void PythonBytesCodeGenerator::beginArray(const std::string &name)
+void PythonBytesCodeGenerator::beginArray(std::string name)
 {
-    stream() << "\n\n" << name << " = b'' \\\n";
+    stream() << "\n\n" << std::move(name) << " = b'' \\\n";
 }
 
 void PythonBytesCodeGenerator::beginArrayRow()
@@ -197,7 +197,7 @@ void PythonBytesCodeGenerator::writeByte(uint8_t byte)
     stream() << byteString;
 }
 
-void PythonBytesCodeGenerator::addComment(const std::string &comment)
+void PythonBytesCodeGenerator::addComment(std::string comment)
 {
     (void)comment;
     stream() << "' \\";

@@ -53,9 +53,9 @@ public:
     CCodeGenerator(const SourceCodeOptions &options);
 
     virtual void begin() override;
-    virtual void beginArray(const std::string &name) override;
+    virtual void beginArray(std::string name) override;
     virtual void writeByte(uint8_t byte) override;
-    virtual void addComment(const std::string &comment) override;
+    virtual void addComment(std::string comment) override;
     virtual void endArray() override;
 };
 
@@ -69,7 +69,7 @@ public:
     ArduinoCodeGenerator(const SourceCodeOptions &options);
 
     virtual void begin() override;
-    virtual void beginArray(const std::string &name) override;
+    virtual void beginArray(std::string name) override;
 };
 
 
@@ -82,9 +82,9 @@ public:
     PythonListCodeGenerator(const SourceCodeOptions &options);
 
     virtual void begin() override;
-    virtual void beginArray(const std::string &name) override;
+    virtual void beginArray(std::string name) override;
     virtual void writeByte(uint8_t byte) override;
-    virtual void addComment(const std::string &comment) override;
+    virtual void addComment(std::string comment) override;
     virtual void endArray() override;
 };
 
@@ -97,10 +97,10 @@ public:
     PythonBytesCodeGenerator(const SourceCodeOptions &options);
 
     virtual void begin() override;
-    virtual void beginArray(const std::string &name) override;
+    virtual void beginArray(std::string name) override;
     virtual void beginArrayRow() override;
     virtual void writeByte(uint8_t byte) override;
-    virtual void addComment(const std::string &comment) override;
+    virtual void addComment(std::string comment) override;
     virtual void endArray() override;
 };
 

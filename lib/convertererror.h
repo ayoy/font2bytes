@@ -7,10 +7,10 @@ struct ConverterError
 {
     static const ConverterError NoError;
 
-    ConverterError(const std::string &summary = "Unknown error",
-                    const std::string &description = "") :
-        summary(summary),
-        description(description)
+    ConverterError(std::string summary = "Unknown error",
+                    std::string description = "") :
+        summary(std::move(summary)),
+        description(std::move(description))
     {}
 
     ConverterError & operator=(const std::string &summary);
