@@ -3,6 +3,7 @@ isEmpty(COMMON_PRI) {
 
     TOP = $${PWD}
     GUI_TARGET = font2bytes
+    CONFIG += c++14
 
     isEmpty( PREFIX ):INSTALL_PREFIX = /usr/local
     else:INSTALL_PREFIX = $${PREFIX}
