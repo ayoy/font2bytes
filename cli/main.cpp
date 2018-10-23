@@ -147,14 +147,13 @@ int main(int argc, char *argv[]) {
 
     parseCommandLineArguments(argc, argv, config);
 
-    std::unique_ptr<SourceCodeGenerator> generator;
-
-    auto it = generators.find(config.generatorIdentifier);
-    if (it != generators.end()) {
-        generator = std::get<GeneratorLambda>(*it)(config.options);
-    } else {
-        generator = std::make_unique<CCodeGenerator>(config.options);
-    }
+    auto generator = [generators, config]() -> std::unique_ptr<SourceCodeGenerator> {
+        auto it = generators.find(config.generatorIdentifier);
+        if (it != generators.end()) {
+            return std::get<GeneratorLambda>(*it)(config.options);
+        }
+        return std::make_unique<CCodeGenerator>(config.options);
+    }();
 
     std::unique_ptr<png_data> imageData { png_data_create(config.inputFilePath) };
     InputPNGImage inputImage(std::move(imageData));
