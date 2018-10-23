@@ -65,7 +65,7 @@ public:
     FixedConverter(uint8_t width, uint8_t height, ReadingMode readingMode);
     virtual ~FixedConverter();
 
-    virtual ConverterError convert(const InputImage &image, ByteWriter *byteWriter) override;
+    virtual ConverterError convert(const InputImage &image, ByteWriter &byteWriter) override;
 
 protected:
     virtual ConverterError checkImage(const InputImage &image);

@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
     InputPNGImage inputImage(std::move(imageData));
 
     FixedConverter converter(config.fontWidth, config.fontHeight, FixedConverter::TopToBottom);
-    auto error = converter.convert(inputImage, generator.get());
+    auto error = converter.convert(inputImage, *(generator.get()));
 
     if (error != ConverterError::NoError) {
         std::cerr << "Error while converting image: "

@@ -36,20 +36,20 @@ ConverterError FixedConverter::checkImage(const InputImage &image)
     return ConverterError::NoError;
 }
 
-ConverterError FixedConverter::convert(const InputImage &image, ByteWriter *byteWriter)
+ConverterError FixedConverter::convert(const InputImage &image, ByteWriter &byteWriter)
 {
     auto checkResult = checkImage(image);
     if (checkResult != ConverterError::NoError) {
         return checkResult;
     }
 
-    byteWriter->begin();
-    byteWriter->beginArray("font");
+    byteWriter.begin();
+    byteWriter.beginArray("font");
 
     int characterCount = 0;
     for (uint8_t y = 0; y < image.height()/m_height; y++) {
         for (uint8_t x = 0; x < image.width()/m_width; x++) {
-            byteWriter->beginArrayRow();
+            byteWriter.beginArrayRow();
             for (uint8_t row = 0; row < m_height; row++) {
                 uint8_t remainingBits = m_width;
 
@@ -77,7 +77,7 @@ ConverterError FixedConverter::convert(const InputImage &image, ByteWriter *byte
                         mask >>= 1;
                         remainingBits -= 1;
                     }
-                    byteWriter->writeByte(byte);
+                    byteWriter.writeByte(byte);
                     byteIndex += 1;
                 }
             }
@@ -85,13 +85,13 @@ ConverterError FixedConverter::convert(const InputImage &image, ByteWriter *byte
             auto size = std::snprintf(nullptr, 0, format, characterCount, characterCount);
             std::string byteString(size, '\0');
             std::sprintf(&byteString[0], format, characterCount, characterCount);
-            byteWriter->addComment(byteString);
-            byteWriter->addLineBreak();
+            byteWriter.addComment(byteString);
+            byteWriter.addLineBreak();
             characterCount += 1;
         }
     }
-    byteWriter->endArray();
-    byteWriter->end();
+    byteWriter.endArray();
+    byteWriter.end();
 
 
     return ConverterError::NoError;

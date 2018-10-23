@@ -8,7 +8,7 @@
 class FontConverter
 {
 public:
-    virtual ConverterError convert(const InputImage &image, ByteWriter *byteWriter) = 0;
+    virtual ConverterError convert(const InputImage &image, ByteWriter &byteWriter) = 0;
 
     /**
      * @brief The direction of the conversion
