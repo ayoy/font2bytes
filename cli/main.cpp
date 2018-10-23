@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
 
     parseCommandLineArguments(argc, argv, config);
 
-    auto generator = [generators, config]() -> std::unique_ptr<SourceCodeGenerator> {
+    auto generator = [&generators, &config]() -> std::unique_ptr<SourceCodeGenerator> {
         auto it = generators.find(config.generatorIdentifier);
         if (it != generators.end()) {
             return std::get<GeneratorLambda>(*it)(config.options);
