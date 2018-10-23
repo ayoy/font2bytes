@@ -7,12 +7,12 @@
 #include <functional>
 #include <map>
 
-typedef std::function<SourceCodeGenerator * (const SourceCodeOptions &)> GeneratorLambda;
+typedef std::function<std::unique_ptr<SourceCodeGenerator> (const SourceCodeOptions &)> GeneratorLambda;
 
 struct SourceCodeGeneratorItem {
     SourceCodeGeneratorItem(std::string identifier,
                             GeneratorLambda createGenerator) :
-        identifier(identifier),
+        identifier(std::move(identifier)),
         createGenerator(createGenerator)
     {}
 
@@ -106,22 +106,22 @@ int main(int argc, char *argv[]) {
     generators.insert(
                 std::pair<std::string, GeneratorLambda>(
                     CCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return new CCodeGenerator(options); })
+                    [](const SourceCodeOptions &options) { return std::unique_ptr<SourceCodeGenerator> { new CCodeGenerator(options) }; })
             );
     generators.insert(
                 std::pair<std::string, GeneratorLambda>(
                     ArduinoCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return new ArduinoCodeGenerator(options); })
+                    [](const SourceCodeOptions &options) { return std::unique_ptr<SourceCodeGenerator> { new ArduinoCodeGenerator(options) }; })
             );
     generators.insert(
                 std::pair<std::string, GeneratorLambda>(
                     PythonListCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return new PythonListCodeGenerator(options); })
+                    [](const SourceCodeOptions &options) { return std::unique_ptr<SourceCodeGenerator> { new PythonListCodeGenerator(options) }; })
             );
     generators.insert(
                 std::pair<std::string, GeneratorLambda>(
                     PythonBytesCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return new PythonBytesCodeGenerator(options); })
+                    [](const SourceCodeOptions &options) { return std::unique_ptr<SourceCodeGenerator> { new PythonBytesCodeGenerator(options) }; })
             );
 
     parseCommandLineArguments(argc, argv, config);
@@ -142,20 +142,20 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    SourceCodeGenerator *generator = nullptr;
+    std::unique_ptr<SourceCodeGenerator> generator = nullptr;
 
     auto it = generators.find(config.generatorIdentifier);
     if (it != generators.end()) {
         generator = (*it).second(config.options);
     } else {
-        generator = new CCodeGenerator(config.options);
+        generator = std::unique_ptr<SourceCodeGenerator>{ new CCodeGenerator(config.options) };
     }
 
-    png_data *imageData = png_data_create(config.inputFilePath);
-    InputPNGImage inputImage(imageData);
+    std::unique_ptr<png_data> imageData{ png_data_create(config.inputFilePath) };
+    InputPNGImage inputImage(std::move(imageData));
 
     FixedConverter converter(config.fontWidth, config.fontHeight, FixedConverter::TopToBottom);
-    ConverterError error = converter.convert(inputImage, generator);
+    ConverterError error = converter.convert(inputImage, generator.get());
 
     if (error != ConverterError::NoError) {
         std::cerr << "Error while converting image: "
@@ -178,8 +178,6 @@ int main(int argc, char *argv[]) {
     } else {
         std::cout << generator->sourceCode();
     }
-
-    delete generator;
 
     return EXIT_SUCCESS;
 }

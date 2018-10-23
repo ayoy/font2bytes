@@ -86,6 +86,7 @@ void png_data_inspect(const png_data *data) {
 
 void png_data_destroy(png_data *data) {
     free(data->row_pointers);
-    free(data);
+    // Temporary until it's rewritten in C++
+    // free(data);
 }
 

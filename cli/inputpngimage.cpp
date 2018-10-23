@@ -1,25 +1,8 @@
 #include "inputpngimage.h"
 
-InputPNGImage::InputPNGImage(png_data *data) :
-    InputImage(),
-    data(data)
-{
-}
-
 InputPNGImage::~InputPNGImage()
 {
-    png_data_destroy(data);
-    data = nullptr;
-}
-
-uint32_t InputPNGImage::width() const
-{
-    return data->width;
-}
-
-uint32_t InputPNGImage::height() const
-{
-    return data->height;
+    png_data_destroy(data.get());
 }
 
 bool InputPNGImage::isPixelSet(uint32_t x, uint32_t y) const
