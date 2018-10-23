@@ -13,15 +13,8 @@ public:
     static std::optional<InputPNGImage> construct(const std::string &filePath);
 
     virtual ~InputPNGImage() = default;
-
-    InputPNGImage(InputPNGImage &&other):
-            InputImage(),
-            _data{std::exchange(other._data, nullptr)} {}
-
-    InputPNGImage& operator=(InputPNGImage &&other) {
-        _data = std::exchange(other._data, nullptr);
-        return *this;
-    }
+    InputPNGImage(InputPNGImage &&other) = default;
+    InputPNGImage& operator=(InputPNGImage &&other) = default;
 
     InputPNGImage(const InputPNGImage &other) = delete;
     InputPNGImage& operator=(const InputPNGImage &other) = delete;
