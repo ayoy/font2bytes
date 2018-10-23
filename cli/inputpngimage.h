@@ -12,7 +12,7 @@ class InputPNGImage : public InputImage
 public:
     static std::optional<InputPNGImage> construct(const std::string &filePath);
 
-    virtual ~InputPNGImage();
+    virtual ~InputPNGImage() = default;
 
     InputPNGImage(InputPNGImage &&other):
             InputImage(),
@@ -31,9 +31,9 @@ public:
     virtual bool isPixelSet(uint32_t x, uint32_t y) const override;
 
 private:
-    InputPNGImage(png_data *data): InputImage(), _data{data} {}
+    InputPNGImage(png_data *data): InputImage(), _data{data, &png_data_destroy} {}
 
-    png_data *_data;
+    std::unique_ptr<png_data, decltype(&png_data_destroy)> _data;
 };
 
 #endif // INPUTPNGIMAGE_H

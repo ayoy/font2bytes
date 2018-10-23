@@ -12,13 +12,6 @@ std::optional<InputPNGImage> InputPNGImage::construct(const std::string &filePat
     return InputPNGImage(data);
 }
 
-InputPNGImage::~InputPNGImage()
-{
-    if (_data) {
-        png_data_destroy(_data);
-    }
-}
-
 bool InputPNGImage::isPixelSet(uint32_t x, uint32_t y) const
 {
     if (x > width() || y > height()) {
