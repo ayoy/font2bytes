@@ -7,7 +7,7 @@
 #include <functional>
 #include <map>
 
-typedef std::function<std::unique_ptr<SourceCodeGenerator> (const SourceCodeOptions &)> GeneratorLambda;
+typedef std::function<std::unique_ptr<SourceCodeGenerator>(SourceCodeOptions)> GeneratorLambda;
 
 struct SourceCodeGeneratorItem {
     SourceCodeGeneratorItem(std::string identifier,
@@ -94,37 +94,7 @@ void parseCommandLineArguments(int argc, char *argv[], Config &config) {
         optind += 1;
     }
     parseOpts(argc, argv, config);
-}
 
-
-
-int main(int argc, char *argv[]) {
-    Config config;
-
-    std::map<std::string, GeneratorLambda> generators;
-
-    generators.insert(
-                std::pair<std::string, GeneratorLambda>(
-                    CCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return std::make_unique<CCodeGenerator>(options); })
-            );
-    generators.insert(
-                std::pair<std::string, GeneratorLambda>(
-                    ArduinoCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return std::make_unique<ArduinoCodeGenerator>(options); })
-            );
-    generators.insert(
-                std::pair<std::string, GeneratorLambda>(
-                    PythonListCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return std::make_unique<PythonListCodeGenerator>(options); })
-            );
-    generators.insert(
-                std::pair<std::string, GeneratorLambda>(
-                    PythonBytesCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return std::make_unique<PythonBytesCodeGenerator>(options); })
-            );
-
-    parseCommandLineArguments(argc, argv, config);
 
     if (!config.fontHeightProvided || config.fontHeight == 0) {
         std::cerr << std::endl
@@ -141,12 +111,47 @@ int main(int argc, char *argv[]) {
         printUsage(argv[0]);
         exit(EXIT_FAILURE);
     }
+}
+
+
+
+int main(int argc, char *argv[]) {
+    Config config;
+
+    std::map<std::string, GeneratorLambda> generators;
+
+    generators.emplace(
+                std::make_pair(
+                    CCodeGenerator::identifier,
+                    [](SourceCodeOptions options) { return std::make_unique<CCodeGenerator>(std::move(options)); }
+                )
+            );
+    generators.emplace(
+                std::make_pair(
+                    ArduinoCodeGenerator::identifier,
+                    [](SourceCodeOptions options) { return std::make_unique<ArduinoCodeGenerator>(std::move(options)); }
+                )
+            );
+    generators.emplace(
+                std::make_pair(
+                    PythonListCodeGenerator::identifier,
+                    [](SourceCodeOptions options) { return std::make_unique<PythonListCodeGenerator>(std::move(options)); }
+                )
+            );
+    generators.emplace(
+                std::make_pair(
+                    PythonBytesCodeGenerator::identifier,
+                    [](SourceCodeOptions options) { return std::make_unique<PythonBytesCodeGenerator>(std::move(options)); }
+                )
+            );
+
+    parseCommandLineArguments(argc, argv, config);
 
     std::unique_ptr<SourceCodeGenerator> generator;
 
     auto it = generators.find(config.generatorIdentifier);
     if (it != generators.end()) {
-        generator = (*it).second(config.options);
+        generator = std::get<GeneratorLambda>(*it)(config.options);
     } else {
         generator = std::make_unique<CCodeGenerator>(config.options);
     }

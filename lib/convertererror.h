@@ -8,7 +8,7 @@ struct ConverterError
     static const ConverterError NoError;
 
     ConverterError(std::string summary = "Unknown error",
-                    std::string description = "") :
+                   std::string description = "") :
         summary(std::move(summary)),
         description(std::move(description))
     {}
