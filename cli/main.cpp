@@ -106,22 +106,22 @@ int main(int argc, char *argv[]) {
     generators.insert(
                 std::pair<std::string, GeneratorLambda>(
                     CCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return std::unique_ptr<SourceCodeGenerator> { new CCodeGenerator(options) }; })
+                    [](const SourceCodeOptions &options) { return std::make_unique<CCodeGenerator>(options); })
             );
     generators.insert(
                 std::pair<std::string, GeneratorLambda>(
                     ArduinoCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return std::unique_ptr<SourceCodeGenerator> { new ArduinoCodeGenerator(options) }; })
+                    [](const SourceCodeOptions &options) { return std::make_unique<ArduinoCodeGenerator>(options); })
             );
     generators.insert(
                 std::pair<std::string, GeneratorLambda>(
                     PythonListCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return std::unique_ptr<SourceCodeGenerator> { new PythonListCodeGenerator(options) }; })
+                    [](const SourceCodeOptions &options) { return std::make_unique<PythonListCodeGenerator>(options); })
             );
     generators.insert(
                 std::pair<std::string, GeneratorLambda>(
                     PythonBytesCodeGenerator::identifier,
-                    [](const SourceCodeOptions &options) { return std::unique_ptr<SourceCodeGenerator> { new PythonBytesCodeGenerator(options) }; })
+                    [](const SourceCodeOptions &options) { return std::make_unique<PythonBytesCodeGenerator>(options); })
             );
 
     parseCommandLineArguments(argc, argv, config);
@@ -148,14 +148,14 @@ int main(int argc, char *argv[]) {
     if (it != generators.end()) {
         generator = (*it).second(config.options);
     } else {
-        generator = std::unique_ptr<SourceCodeGenerator>{ new CCodeGenerator(config.options) };
+        generator = std::make_unique<CCodeGenerator>(config.options);
     }
 
-    std::unique_ptr<png_data> imageData{ png_data_create(config.inputFilePath) };
+    std::unique_ptr<png_data> imageData { png_data_create(config.inputFilePath) };
     InputPNGImage inputImage(std::move(imageData));
 
     FixedConverter converter(config.fontWidth, config.fontHeight, FixedConverter::TopToBottom);
-    ConverterError error = converter.convert(inputImage, generator.get());
+    auto error = converter.convert(inputImage, generator.get());
 
     if (error != ConverterError::NoError) {
         std::cerr << "Error while converting image: "
