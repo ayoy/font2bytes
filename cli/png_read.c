@@ -6,6 +6,10 @@
 png_data * png_data_create(const char *filename) {
     FILE *fp = fopen(filename, "rb");
 
+    if (!fp) {
+        return NULL;
+    }
+
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if (!png) abort();
 
@@ -73,20 +77,19 @@ png_data * png_data_create(const char *filename) {
     return data;
 }
 
-void png_data_inspect(const png_data *data) {
-    for (int y = 0; y < data->height; y++) {
-        png_bytep row = data->row_pointers[y];
-        for (int x = 0; x < data->width; x++) {
-            png_bytep px = &(row[x * 4]);
-            // Do something awesome for each pixel here...
-            printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
-        }
-    }
-}
+//void png_data_inspect(const png_data *data) {
+//    for (int y = 0; y < data->height; y++) {
+//        png_bytep row = data->row_pointers[y];
+//        for (int x = 0; x < data->width; x++) {
+//            png_bytep px = &(row[x * 4]);
+//            // Do something awesome for each pixel here...
+//            printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
+//        }
+//    }
+//}
 
 void png_data_destroy(png_data *data) {
     free(data->row_pointers);
-    // Temporary until it's rewritten in C++
-    // free(data);
+    free(data);
 }
 

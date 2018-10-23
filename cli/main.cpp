@@ -155,11 +155,14 @@ int main(int argc, char *argv[]) {
         return std::make_unique<CCodeGenerator>(config.options);
     }();
 
-    std::unique_ptr<png_data> imageData { png_data_create(config.inputFilePath) };
-    InputPNGImage inputImage(std::move(imageData));
+    auto inputImage = InputPNGImage::construct(std::string(config.inputFilePath));
+    if (!inputImage.has_value()) {
+        std::cerr << "Error while converting image: " << strerror(errno) << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     FixedConverter converter(config.fontWidth, config.fontHeight, FixedConverter::TopToBottom);
-    auto error = converter.convert(inputImage, *(generator.get()));
+    auto error = converter.convert(*inputImage, *(generator.get()));
 
     if (error != ConverterError::NoError) {
         std::cerr << "Error while converting image: "

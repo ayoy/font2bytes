@@ -1,8 +1,22 @@
 #include "inputpngimage.h"
+#include <iostream>
+#include <cerrno>
+
+std::optional<InputPNGImage> InputPNGImage::construct(const std::string &filePath)
+{
+    png_data *data = png_data_create(filePath.c_str());
+    if (data == nullptr) {
+        std::cerr << "Failed to read PNG file at " << filePath << ": " << strerror(errno) << std::endl;
+        return std::nullopt;
+    }
+    return InputPNGImage(data);
+}
 
 InputPNGImage::~InputPNGImage()
 {
-    png_data_destroy(data.get());
+    if (_data) {
+        png_data_destroy(_data);
+    }
 }
 
 bool InputPNGImage::isPixelSet(uint32_t x, uint32_t y) const
@@ -11,7 +25,7 @@ bool InputPNGImage::isPixelSet(uint32_t x, uint32_t y) const
         return false;
     }
 
-    png_bytep pixel = &(data->row_pointers[y][x*4]);
+    png_bytep pixel = &(_data->row_pointers[y][x*4]);
 
     // require 100% alpha
     if (pixel[3] < 0xFF) {
