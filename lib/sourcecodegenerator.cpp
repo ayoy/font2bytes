@@ -1,18 +1,10 @@
 #include "sourcecodegenerator.h"
 #include <ctime>
 
-SourceCodeGenerator::SourceCodeGenerator(const SourceCodeOptions &options):
-    options(options),
-    m_stream(new std::ostringstream)
+SourceCodeGenerator::SourceCodeGenerator(SourceCodeOptions options):
+    options(std::move(options)),
+    m_stream(std::make_unique<std::ostringstream>())
 {
-}
-
-SourceCodeGenerator::~SourceCodeGenerator()
-{
-    if (m_stream) {
-        delete m_stream;
-        m_stream = nullptr;
-    }
 }
 
 std::string SourceCodeGenerator::getCurrentTimestamp() const
@@ -60,10 +52,14 @@ void SourceCodeGenerator::end()
 }
 
 
+//
+// CCodeGenerator
+//
+
 const std::string CCodeGenerator::identifier = "c";
 const std::string CCodeGenerator::description = "C/C++ unsigned char array";
 
-CCodeGenerator::CCodeGenerator(const SourceCodeOptions &options) :
+CCodeGenerator::CCodeGenerator(SourceCodeOptions options) :
     SourceCodeGenerator(options)
 {
 }
@@ -101,10 +97,14 @@ void CCodeGenerator::endArray()
 }
 
 
+//
+// ArduinoCodeGenerator
+//
+
 const std::string ArduinoCodeGenerator::identifier = "arduino";
 const std::string ArduinoCodeGenerator::description = "Arduino-compatible array";
 
-ArduinoCodeGenerator::ArduinoCodeGenerator(const SourceCodeOptions &options) :
+ArduinoCodeGenerator::ArduinoCodeGenerator(SourceCodeOptions options) :
     CCodeGenerator(options)
 {
 }
@@ -121,10 +121,14 @@ void ArduinoCodeGenerator::beginArray(std::string name)
 }
 
 
+//
+// PythonListCodeGenerator
+//
+
 const std::string PythonListCodeGenerator::identifier = "pylist";
 const std::string PythonListCodeGenerator::description = "Python list";
 
-PythonListCodeGenerator::PythonListCodeGenerator(const SourceCodeOptions &options) :
+PythonListCodeGenerator::PythonListCodeGenerator(SourceCodeOptions options) :
     SourceCodeGenerator(options)
 {
 }
@@ -162,10 +166,14 @@ void PythonListCodeGenerator::endArray()
 }
 
 
+//
+// PythonBytesCodeGenerator
+//
+
 const std::string PythonBytesCodeGenerator::identifier = "pybytes";
 const std::string PythonBytesCodeGenerator::description = "Python bytes object";
 
-PythonBytesCodeGenerator::PythonBytesCodeGenerator(const SourceCodeOptions &options) :
+PythonBytesCodeGenerator::PythonBytesCodeGenerator(SourceCodeOptions options) :
     SourceCodeGenerator(options)
 {
 }

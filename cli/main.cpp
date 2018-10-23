@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    std::unique_ptr<SourceCodeGenerator> generator = nullptr;
+    std::unique_ptr<SourceCodeGenerator> generator;
 
     auto it = generators.find(config.generatorIdentifier);
     if (it != generators.end()) {

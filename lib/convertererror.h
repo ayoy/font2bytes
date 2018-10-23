@@ -13,7 +13,7 @@ struct ConverterError
         description(std::move(description))
     {}
 
-    ConverterError & operator=(const std::string &summary);
+    ConverterError & operator=(std::string summary);
     bool operator ==(const ConverterError &rhs) const;
     bool operator !=(const ConverterError &rhs) const;
 

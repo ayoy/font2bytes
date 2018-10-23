@@ -2,9 +2,9 @@
 
 const ConverterError ConverterError::NoError = { "No error" };
 
-ConverterError & ConverterError::operator =(const std::string &summary)
+ConverterError & ConverterError::operator =(std::string summary)
 {
-    this->summary = summary;
+    this->summary = std::move(summary);
     description = "";
     return *this;
 }

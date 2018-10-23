@@ -23,8 +23,8 @@ struct SourceCodeOptions
 class SourceCodeGenerator : public ByteWriter
 {
 public:
-    SourceCodeGenerator(const SourceCodeOptions &options);
-    virtual ~SourceCodeGenerator();
+    SourceCodeGenerator(SourceCodeOptions options);
+    virtual ~SourceCodeGenerator() = default;
 
     inline std::string sourceCode() { return m_stream->str(); }
 
@@ -33,14 +33,14 @@ public:
     virtual void end() override;
 
 protected:
-    inline std::ostringstream &stream() { return *m_stream; }
+    inline std::ostringstream &stream() { return *(m_stream.get()); }
     const SourceCodeOptions options;
 
     std::string getCurrentTimestamp() const;
     uint8_t formatByte(uint8_t byte) const;
 
 private:
-    std::ostringstream *m_stream;
+    std::unique_ptr<std::ostringstream> m_stream;
 };
 
 
@@ -50,7 +50,7 @@ public:
     static const std::string identifier;
     static const std::string description;
 
-    CCodeGenerator(const SourceCodeOptions &options);
+    CCodeGenerator(SourceCodeOptions options);
 
     virtual void begin() override;
     virtual void beginArray(std::string name) override;
@@ -66,7 +66,7 @@ public:
     static const std::string identifier;
     static const std::string description;
 
-    ArduinoCodeGenerator(const SourceCodeOptions &options);
+    ArduinoCodeGenerator(SourceCodeOptions options);
 
     virtual void begin() override;
     virtual void beginArray(std::string name) override;
@@ -79,7 +79,7 @@ public:
     static const std::string identifier;
     static const std::string description;
 
-    PythonListCodeGenerator(const SourceCodeOptions &options);
+    PythonListCodeGenerator(SourceCodeOptions options);
 
     virtual void begin() override;
     virtual void beginArray(std::string name) override;
@@ -94,7 +94,7 @@ public:
     static const std::string identifier;
     static const std::string description;
 
-    PythonBytesCodeGenerator(const SourceCodeOptions &options);
+    PythonBytesCodeGenerator(SourceCodeOptions options);
 
     virtual void begin() override;
     virtual void beginArray(std::string name) override;
