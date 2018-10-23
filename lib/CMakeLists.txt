@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 project(font2bytes)
 
@@ -14,10 +14,13 @@ add_library(${PROJECT_NAME} SHARED
         fixedconverter.cpp
         sourcecodegenerator.cpp)
 
-target_link_libraries(${PROJECT_NAME} png)
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC ${PNG_DEFINITIONS})
+target_link_libraries(${PROJECT_NAME} ${PNG_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
-	${PNG_INCLUDE_DIR})
+	${PNG_INCLUDE_DIRS})
+
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         SOVERSION 1.0.0
