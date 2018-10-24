@@ -7,10 +7,6 @@ FixedConverter::FixedConverter(uint8_t width, uint8_t height, ReadingMode readin
 {
 }
 
-FixedConverter::~FixedConverter()
-{
-}
-
 ConverterError FixedConverter::checkImage(const InputImage &image)
 {
     if (image.width() < m_width) {

@@ -63,7 +63,7 @@ class FixedConverter : public FontConverter
 {
 public:
     FixedConverter(uint8_t width, uint8_t height, ReadingMode readingMode);
-    virtual ~FixedConverter();
+    virtual ~FixedConverter() = default;
 
     virtual ConverterError convert(const InputImage &image, ByteWriter &byteWriter) override;
 

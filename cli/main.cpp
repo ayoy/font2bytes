@@ -9,16 +9,6 @@
 
 typedef std::function<std::unique_ptr<SourceCodeGenerator>(SourceCodeOptions)> GeneratorLambda;
 
-struct SourceCodeGeneratorItem {
-    SourceCodeGeneratorItem(std::string identifier,
-                            GeneratorLambda createGenerator) :
-        identifier(std::move(identifier)),
-        createGenerator(createGenerator)
-    {}
-
-    std::string identifier;
-    GeneratorLambda createGenerator;
-};
 
 struct Config {
     bool fontWidthProvided { false };
@@ -31,7 +21,7 @@ struct Config {
     char *inputFilePath { nullptr };
 };
 
-void printUsage(char *programName) {
+static void printUsage(char *programName) {
     std::cerr << "Usage: " << programName << " -h font_height -w font_width [-i] [-l|-m] "
               << "[-f output_format] path_to_image [-o path_to_output_file]" << std::endl
               << std::endl
@@ -53,7 +43,7 @@ void printUsage(char *programName) {
               << "  " << PythonBytesCodeGenerator::identifier << "\t\t- " << PythonBytesCodeGenerator::description << std::endl;
 }
 
-void parseOpts(int argc, char *argv[], Config &config) {
+static void parseOpts(int argc, char *argv[], Config &config) {
     int opt;
     while ((opt = getopt(argc, argv, "w:h:f:ilmo:")) != -1) {
         switch (opt) {
@@ -87,7 +77,7 @@ void parseOpts(int argc, char *argv[], Config &config) {
     }
 }
 
-void parseCommandLineArguments(int argc, char *argv[], Config &config) {
+static void parseCommandLineArguments(int argc, char *argv[], Config &config) {
     parseOpts(argc, argv, config);
     if (optind < argc) {
         config.inputFilePath = argv[optind];
@@ -113,37 +103,25 @@ void parseCommandLineArguments(int argc, char *argv[], Config &config) {
     }
 }
 
-
+template <typename T>
+static auto make_generator_pair() {
+    return std::make_pair(
+            T::identifier,
+            [](SourceCodeOptions options) {
+                return std::make_unique<T>(std::move(options));
+            }
+    );
+}
 
 int main(int argc, char *argv[]) {
     Config config;
 
-    std::map<std::string, GeneratorLambda> generators;
+    std::map<const std::string, GeneratorLambda> generators;
 
-    generators.emplace(
-                std::make_pair(
-                    CCodeGenerator::identifier,
-                    [](SourceCodeOptions options) { return std::make_unique<CCodeGenerator>(std::move(options)); }
-                )
-            );
-    generators.emplace(
-                std::make_pair(
-                    ArduinoCodeGenerator::identifier,
-                    [](SourceCodeOptions options) { return std::make_unique<ArduinoCodeGenerator>(std::move(options)); }
-                )
-            );
-    generators.emplace(
-                std::make_pair(
-                    PythonListCodeGenerator::identifier,
-                    [](SourceCodeOptions options) { return std::make_unique<PythonListCodeGenerator>(std::move(options)); }
-                )
-            );
-    generators.emplace(
-                std::make_pair(
-                    PythonBytesCodeGenerator::identifier,
-                    [](SourceCodeOptions options) { return std::make_unique<PythonBytesCodeGenerator>(std::move(options)); }
-                )
-            );
+    generators.emplace(make_generator_pair<CCodeGenerator>());
+    generators.emplace(make_generator_pair<ArduinoCodeGenerator>());
+    generators.emplace(make_generator_pair<PythonListCodeGenerator>());
+    generators.emplace(make_generator_pair<PythonBytesCodeGenerator>());
 
     parseCommandLineArguments(argc, argv, config);
 
