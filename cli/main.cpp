@@ -116,7 +116,7 @@ static auto make_generator_pair() {
 int main(int argc, char *argv[]) {
     Config config;
 
-    std::map<const std::string, GeneratorLambda> generators;
+    std::map<const std::string, const GeneratorLambda> generators;
 
     generators.emplace(make_generator_pair<CCodeGenerator>());
     generators.emplace(make_generator_pair<ArduinoCodeGenerator>());
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
     auto generator = [&generators, &config]() -> std::unique_ptr<SourceCodeGenerator> {
         auto it = generators.find(config.generatorIdentifier);
         if (it != generators.end()) {
-            return std::get<GeneratorLambda>(*it)(config.options);
+            return std::get<const GeneratorLambda>(*it)(config.options);
         }
         return std::make_unique<CCodeGenerator>(config.options);
     }();
