@@ -31,13 +31,13 @@ macx: equals(GUI, "1"): {
 SOURCES += \
     bytewriter.cpp \
     convertererror.cpp \
-    fixedconverter.cpp \
+    fixedwidthfontconverter.cpp \
     sourcecodegenerator.cpp
 
 HEADERS += \
     bytewriter.h \
     convertererror.h \
-    fixedconverter.h \
+    fixedwidthfontconverter.h \
     fontconverter.h \
     inputimage.h \
     sourcecodegenerator.h \

@@ -1,6 +1,6 @@
-#include "fixedconverter.h"
+#include "fixedwidthfontconverter.h"
 
-ConverterError FixedConverter::checkImage(const InputImage &image)
+ConverterError FixedWidthFontConverter::checkImage(const InputImage &image)
 {
     if (image.width() < m_width) {
         return ConverterError("Image Too Small",
@@ -25,7 +25,7 @@ ConverterError FixedConverter::checkImage(const InputImage &image)
     return ConverterError::NoError;
 }
 
-std::string FixedConverter::convert(const InputImage &image, ConverterError *error)
+std::string FixedWidthFontConverter::convert(const InputImage &image, ConverterError *error)
 {
     auto checkResult = checkImage(image);
     if (checkResult != ConverterError::NoError) {

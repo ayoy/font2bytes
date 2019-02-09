@@ -107,8 +107,8 @@ void MainWindow::updateConfig()
     config.fontHeight = converted ? (uint8_t)intValue : 0;
 
     config.readingMode = ui->topBottomRadioButton->isChecked() ?
-                FixedConverter::TopToBottom :
-                FixedConverter::LeftToRight;
+                FixedWidthFontConverter::TopToBottom :
+                FixedWidthFontConverter::LeftToRight;
 
     config.shouldInvertBits = ui->invertBitsCheckBox->isChecked();
 
@@ -157,10 +157,10 @@ void MainWindow::applyCurrentConfig()
     ui->heightLineEdit->setText(fontString);
 
     switch (config.readingMode) {
-    case FixedConverter::TopToBottom:
+    case FixedWidthFontConverter::TopToBottom:
         ui->topBottomRadioButton->setChecked(true);
         break;
-    case FixedConverter::LeftToRight:
+    case FixedWidthFontConverter::LeftToRight:
         ui->leftRightRadioButton->setChecked(true);
         break;
     }

@@ -12,7 +12,7 @@ add_library(${PROJECT_NAME} SHARED
         ${headers}
 		bytewriter.cpp
 		convertererror.cpp
-        fixedconverter.cpp
+		fixedwidthfontconverter.cpp
         sourcecodegenerator.cpp)
 
 

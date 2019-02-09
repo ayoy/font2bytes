@@ -1,5 +1,5 @@
-#ifndef FIXEDCONVERTER_H
-#define FIXEDCONVERTER_H
+#ifndef FIXEDWIDTHFONTCONVERTER_H
+#define FIXEDWIDTHFONTCONVERTER_H
 
 #include "inputimage.h"
 #include "sourcecodegenerator.h"
@@ -61,7 +61,7 @@
  * This char will result in the byte sequence: 0x3c, 0x66, 0x66, ...
  *
  */
-class FixedConverter
+class FixedWidthFontConverter
 {
 public:
     /**
@@ -72,14 +72,14 @@ public:
         LeftToRight  /// Each character from left to right.
     };
 
-    FixedConverter(uint8_t width, uint8_t height, ReadingMode readingMode, std::unique_ptr<SourceCodeGeneratorInterface> generator):
+    FixedWidthFontConverter(uint8_t width, uint8_t height, ReadingMode readingMode, std::unique_ptr<SourceCodeGeneratorInterface> generator):
             m_width(width),
             m_height(height),
             m_readingMode(readingMode),
             m_generator(std::move(generator))
     {}
 
-    virtual ~FixedConverter() = default;
+    virtual ~FixedWidthFontConverter() = default;
 
     std::string convert(const InputImage &image, ConverterError *error = nullptr);
 
@@ -93,4 +93,4 @@ private:
     std::unique_ptr<SourceCodeGeneratorInterface> m_generator;
 };
 
-#endif // FIXEDCONVERTER_H
+#endif // FIXEDWIDTHFONTCONVERTER_H

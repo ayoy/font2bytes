@@ -145,9 +145,9 @@ int main(int argc, char *argv[]) {
 
     auto generator = makeGenerator(config);
 
-    FixedConverter converter(config.fontWidth,
+    FixedWidthFontConverter converter(config.fontWidth,
             config.fontHeight,
-            FixedConverter::TopToBottom,
+            FixedWidthFontConverter::TopToBottom,
             std::move(generator));
 
     ConverterError error;
