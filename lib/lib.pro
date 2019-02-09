@@ -4,15 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       -= core gui
+CONFIG -= qt
 
 TARGET = font2bytes
 TEMPLATE = lib
 VERSION = 1.0.0
 
 DEFINES += F2B_LIBRARY
-
-DEFINES += QT_DEPRECATED_WARNINGS
 
 include(../common.pri)
 
@@ -31,8 +29,7 @@ macx: equals(GUI, "1"): {
 SOURCES += \
     bytewriter.cpp \
     convertererror.cpp \
-    fixedwidthfontconverter.cpp \
-    sourcecodegenerator.cpp
+    fixedwidthfontconverter.cpp
 
 HEADERS += \
     bytewriter.h \

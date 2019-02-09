@@ -9,7 +9,6 @@ TEMPLATE = app
 VERSION = 1.0.0
 
 
-
 DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += $$PWD/../lib ui conv

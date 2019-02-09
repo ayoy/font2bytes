@@ -6,14 +6,18 @@ project(font2bytes)
 
 set(TARGET)
 
-FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+set(HEADERS bytewriter.h
+		convertererror.h
+		f2b.h
+		fixedwidthfontconverter.h
+		inputimage.h
+		sourcecodegenerator.h)
 
 add_library(${PROJECT_NAME} SHARED
-        ${headers}
+        ${HEADERS}
 		bytewriter.cpp
 		convertererror.cpp
-		fixedwidthfontconverter.cpp
-        sourcecodegenerator.cpp)
+		fixedwidthfontconverter.cpp)
 
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC ${PNG_DEFINITIONS})
@@ -27,7 +31,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         SOVERSION 1.0.0
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-INSTALL(FILES ${headers} DESTINATION include/f2b)
+INSTALL(FILES ${HEADERS} DESTINATION include/f2b)
 INSTALL(FILES include/f2b.h DESTINATION include)
 INSTALL(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION bin
