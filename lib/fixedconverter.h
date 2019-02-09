@@ -1,7 +1,9 @@
 #ifndef FIXEDCONVERTER_H
 #define FIXEDCONVERTER_H
 
-#include "fontconverter.h"
+#include "inputimage.h"
+#include "sourcecodegenerator.h"
+#include "convertererror.h"
 #include <cstdint>
 
 /**
@@ -59,13 +61,27 @@
  * This char will result in the byte sequence: 0x3c, 0x66, 0x66, ...
  *
  */
-class FixedConverter : public FontConverter
+class FixedConverter
 {
 public:
-    FixedConverter(uint8_t width, uint8_t height, ReadingMode readingMode);
+    /**
+     * @brief The direction of the conversion
+     */
+    enum ReadingMode {
+        TopToBottom, /// Each character from top to bottom.
+        LeftToRight  /// Each character from left to right.
+    };
+
+    FixedConverter(uint8_t width, uint8_t height, ReadingMode readingMode, std::unique_ptr<SourceCodeGeneratorInterface> generator):
+            m_width(width),
+            m_height(height),
+            m_readingMode(readingMode),
+            m_generator(std::move(generator))
+    {}
+
     virtual ~FixedConverter() = default;
 
-    virtual ConverterError convert(const InputImage &image, ByteWriter &byteWriter) override;
+    std::string convert(const InputImage &image, ConverterError *error = nullptr);
 
 protected:
     virtual ConverterError checkImage(const InputImage &image);
@@ -74,6 +90,7 @@ private:
     uint8_t m_width;
     uint8_t m_height;
     ReadingMode m_readingMode;
+    std::unique_ptr<SourceCodeGeneratorInterface> m_generator;
 };
 
 #endif // FIXEDCONVERTER_H

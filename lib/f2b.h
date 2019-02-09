@@ -4,7 +4,6 @@
 #include "bytewriter.h"
 #include "convertererror.h"
 #include "fixedconverter.h"
-#include "fontconverter.h"
 #include "inputimage.h"
 #include "sourcecodegenerator.h"
 

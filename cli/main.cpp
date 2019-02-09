@@ -7,7 +7,7 @@
 #include <functional>
 #include <map>
 
-typedef std::function<std::unique_ptr<SourceCodeGenerator>(SourceCodeOptions)> GeneratorLambda;
+typedef std::function<std::unique_ptr<SourceCodeGeneratorInterface>(SourceCodeOptions)> GeneratorLambda;
 
 
 struct Config {
@@ -21,7 +21,8 @@ struct Config {
     char *inputFilePath { nullptr };
 };
 
-static void printUsage(char *programName) {
+static void printUsage(char *programName)
+{
     std::cerr << "Usage: " << programName << " -h font_height -w font_width [-i] [-l|-m] "
               << "[-f output_format] path_to_image [-o path_to_output_file]" << std::endl
               << std::endl
@@ -43,17 +44,18 @@ static void printUsage(char *programName) {
               << "  " << PythonBytesCodeGenerator::identifier << "\t\t- " << PythonBytesCodeGenerator::description << std::endl;
 }
 
-static void parseOpts(int argc, char *argv[], Config &config) {
+static void parseOpts(int argc, char *argv[], Config &config)
+{
     int opt;
     while ((opt = getopt(argc, argv, "w:h:f:ilmo:")) != -1) {
         switch (opt) {
         case 'w':
             config.fontWidthProvided = true;
-            config.fontWidth = atoi(optarg);
+            config.fontWidth = (uint8_t)strtol(optarg, NULL, 10);
             break;
         case 'h':
             config.fontHeightProvided = true;
-            config.fontHeight = atoi(optarg);
+            config.fontHeight = (uint8_t)strtol(optarg, NULL, 10);
             break;
         case 'i':
             config.options.shouldInvertBits = true;
@@ -77,7 +79,8 @@ static void parseOpts(int argc, char *argv[], Config &config) {
     }
 }
 
-static void parseCommandLineArguments(int argc, char *argv[], Config &config) {
+static void parseCommandLineArguments(int argc, char *argv[], Config &config)
+{
     parseOpts(argc, argv, config);
     if (optind < argc) {
         config.inputFilePath = argv[optind];
@@ -104,34 +107,35 @@ static void parseCommandLineArguments(int argc, char *argv[], Config &config) {
 }
 
 template <typename T>
-static auto make_generator_pair() {
+static auto make_generator_pair()
+{
     return std::make_pair(
             T::identifier,
             [](SourceCodeOptions options) {
-                return std::make_unique<T>(std::move(options));
+                return std::make_unique<SourceCodeGenerator<T>>(std::move(options));
             }
     );
 }
 
-int main(int argc, char *argv[]) {
-    Config config;
-
-    std::map<const std::string, const GeneratorLambda> generators;
+static std::unique_ptr<SourceCodeGeneratorInterface> makeGenerator(const Config &config)
+{
+    std::map<const std::string, GeneratorLambda> generators;
 
     generators.emplace(make_generator_pair<CCodeGenerator>());
     generators.emplace(make_generator_pair<ArduinoCodeGenerator>());
     generators.emplace(make_generator_pair<PythonListCodeGenerator>());
     generators.emplace(make_generator_pair<PythonBytesCodeGenerator>());
 
-    parseCommandLineArguments(argc, argv, config);
+    auto it = generators.find(config.generatorIdentifier);
+    if (it != generators.end()) {
+        return std::get<1>(*it)(config.options);
+    }
+    return std::make_unique<SourceCodeGenerator<CCodeGenerator>>(config.options);
+}
 
-    auto generator = [&generators, &config]() -> std::unique_ptr<SourceCodeGenerator> {
-        auto it = generators.find(config.generatorIdentifier);
-        if (it != generators.end()) {
-            return std::get<const GeneratorLambda>(*it)(config.options);
-        }
-        return std::make_unique<CCodeGenerator>(config.options);
-    }();
+int main(int argc, char *argv[]) {
+    Config config;
+    parseCommandLineArguments(argc, argv, config);
 
     auto inputImage = InputPNGImage::construct(std::string(config.inputFilePath));
     if (!inputImage.has_value()) {
@@ -139,8 +143,15 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    FixedConverter converter(config.fontWidth, config.fontHeight, FixedConverter::TopToBottom);
-    auto error = converter.convert(*inputImage, *(generator.get()));
+    auto generator = makeGenerator(config);
+
+    FixedConverter converter(config.fontWidth,
+            config.fontHeight,
+            FixedConverter::TopToBottom,
+            std::move(generator));
+
+    ConverterError error;
+    auto sourceCode = converter.convert(*inputImage, &error);
 
     if (error != ConverterError::NoError) {
         std::cerr << "Error while converting image: "
@@ -156,12 +167,12 @@ int main(int argc, char *argv[]) {
             std::cerr << "Failed to write to file at " << config.outputFilePath << std::endl;
             exit(EXIT_FAILURE);
         } else {
-            file << generator->sourceCode();
+            file << sourceCode;
             file.close();
             std::cout << "Successfully wrote source code to " << config.outputFilePath << std::endl;
         }
     } else {
-        std::cout << generator->sourceCode();
+        std::cout << sourceCode;
     }
 
     return EXIT_SUCCESS;

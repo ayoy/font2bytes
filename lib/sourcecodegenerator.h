@@ -3,6 +3,7 @@
 
 #include "bytewriter.h"
 #include <sstream>
+#include <ctime>
 
 struct SourceCodeOptions
 {
@@ -19,18 +20,48 @@ struct SourceCodeOptions
     bool shouldInvertBits { false };
 };
 
+class SourceCodeGeneratorInterface {
+public:
+    virtual void begin() = 0;
+    virtual void beginArray(const std::string &name) = 0;
+    virtual void beginArrayRow() = 0;
+    virtual void writeByte(uint8_t byte) = 0;
+    virtual void addComment(const std::string &comment) = 0;
+    virtual void addLineBreak() = 0;
+    virtual void endArray() = 0;
+    virtual void end() = 0;
+    virtual std::string sourceCode() = 0;
+    virtual ~SourceCodeGeneratorInterface() = default;
+};
 
-class SourceCodeGenerator : public ByteWriter
+template <class T>
+class SourceCodeGenerator: public SourceCodeGeneratorInterface
 {
 public:
-    SourceCodeGenerator(SourceCodeOptions options);
+    explicit SourceCodeGenerator(SourceCodeOptions options):
+            options(std::move(options)),
+            m_bytewriter(std::make_unique<T>()),
+            m_stream(std::make_unique<std::ostringstream>())
+    {}
+
+    SourceCodeGenerator(SourceCodeGenerator &&other):
+            options(std::move(other.options)),
+            m_bytewriter(std::move(other.m_bytewriter)),
+            m_stream(std::move(other.m_stream))
+    {}
+
     virtual ~SourceCodeGenerator() = default;
 
-    inline std::string sourceCode() { return m_stream->str(); }
+    inline std::string sourceCode() override { return m_stream->str(); }
 
-    virtual void beginArrayRow() override;
-    virtual void addLineBreak() override;
-    virtual void end() override;
+    void begin() override;
+    void beginArray(const std::string &name) override;
+    void beginArrayRow() override;
+    void writeByte(uint8_t byte) override;
+    void addComment(const std::string &comment) override;
+    void addLineBreak() override;
+    void endArray() override;
+    void end() override;
 
 protected:
     inline std::ostringstream &stream() { return *(m_stream.get()); }
@@ -40,68 +71,88 @@ protected:
     uint8_t formatByte(uint8_t byte) const;
 
 private:
+    std::unique_ptr<T> m_bytewriter;
     std::unique_ptr<std::ostringstream> m_stream;
 };
 
-
-class CCodeGenerator : public SourceCodeGenerator
+template <class T>
+std::string SourceCodeGenerator<T>::getCurrentTimestamp() const
 {
-public:
-    static const std::string identifier;
-    static const std::string description;
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[22];
+    tstruct = *localtime(&now);
+    strftime(buf, sizeof(buf), "%d/%m/%Y at %H:%M:%S", &tstruct);
 
-    CCodeGenerator(SourceCodeOptions options);
+    return buf;
+}
 
-    virtual void begin() override;
-    virtual void beginArray(std::string name) override;
-    virtual void writeByte(uint8_t byte) override;
-    virtual void addComment(std::string comment) override;
-    virtual void endArray() override;
-};
-
-
-class ArduinoCodeGenerator : public CCodeGenerator
+template <class T>
+uint8_t SourceCodeGenerator<T>::formatByte(uint8_t byte) const
 {
-public:
-    static const std::string identifier;
-    static const std::string description;
+    if (options.bitNumbering == SourceCodeOptions::MSB) {
+        uint8_t reversedByte = 0;
+        for (uint8_t i = 0; i < 8; i++) {
+            if ((byte & (1<<i)) != 0) {
+                uint8_t setBit = 1<<(7-i);
+                reversedByte |= setBit;
+            }
+        }
+        byte = reversedByte;
+    }
+    if (options.shouldInvertBits) {
+        byte = ~byte;
+    }
+    return byte;
+}
 
-    ArduinoCodeGenerator(SourceCodeOptions options);
-
-    virtual void begin() override;
-    virtual void beginArray(std::string name) override;
-};
-
-
-class PythonListCodeGenerator : public SourceCodeGenerator
+template <class T>
+void SourceCodeGenerator<T>::begin()
 {
-public:
-    static const std::string identifier;
-    static const std::string description;
+    m_stream->flush();
+    *m_stream << m_bytewriter->begin(std::move(getCurrentTimestamp()));
+}
 
-    PythonListCodeGenerator(SourceCodeOptions options);
-
-    virtual void begin() override;
-    virtual void beginArray(std::string name) override;
-    virtual void writeByte(uint8_t byte) override;
-    virtual void addComment(std::string comment) override;
-    virtual void endArray() override;
-};
-
-class PythonBytesCodeGenerator : public SourceCodeGenerator
+template <class T>
+void SourceCodeGenerator<T>::beginArray(const std::string &name)
 {
-public:
-    static const std::string identifier;
-    static const std::string description;
+    *m_stream << m_bytewriter->beginArray(name);
+}
 
-    PythonBytesCodeGenerator(SourceCodeOptions options);
+template <class T>
+void SourceCodeGenerator<T>::beginArrayRow()
+{
+    *m_stream << m_bytewriter->beginArrayRow();
+}
 
-    virtual void begin() override;
-    virtual void beginArray(std::string name) override;
-    virtual void beginArrayRow() override;
-    virtual void writeByte(uint8_t byte) override;
-    virtual void addComment(std::string comment) override;
-    virtual void endArray() override;
-};
+template <class T>
+void SourceCodeGenerator<T>::writeByte(uint8_t byte)
+{
+    *m_stream << m_bytewriter->byte(formatByte(byte));
+}
+
+template <class T>
+void SourceCodeGenerator<T>::addComment(const std::string &comment)
+{
+    *m_stream << m_bytewriter->comment(comment);
+}
+
+template <class T>
+void SourceCodeGenerator<T>::addLineBreak()
+{
+    *m_stream << m_bytewriter->lineBreak();
+}
+
+template <class T>
+void SourceCodeGenerator<T>::endArray()
+{
+    *m_stream << m_bytewriter->endArray();
+}
+
+template <class T>
+void SourceCodeGenerator<T>::end()
+{
+    *m_stream << m_bytewriter->end();
+}
 
 #endif // SOURCECODEGENERATOR_H

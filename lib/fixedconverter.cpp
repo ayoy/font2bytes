@@ -1,12 +1,5 @@
 #include "fixedconverter.h"
 
-FixedConverter::FixedConverter(uint8_t width, uint8_t height, ReadingMode readingMode) :
-    m_width(width),
-    m_height(height),
-    m_readingMode(readingMode)
-{
-}
-
 ConverterError FixedConverter::checkImage(const InputImage &image)
 {
     if (image.width() < m_width) {
@@ -32,20 +25,23 @@ ConverterError FixedConverter::checkImage(const InputImage &image)
     return ConverterError::NoError;
 }
 
-ConverterError FixedConverter::convert(const InputImage &image, ByteWriter &byteWriter)
+std::string FixedConverter::convert(const InputImage &image, ConverterError *error)
 {
     auto checkResult = checkImage(image);
     if (checkResult != ConverterError::NoError) {
-        return checkResult;
+        if (error) {
+            *error = checkResult;
+        }
+        return "";
     }
 
-    byteWriter.begin();
-    byteWriter.beginArray("font");
+    m_generator->begin();
+    m_generator->beginArray("font");
 
     int characterCount = 0;
     for (uint8_t y = 0; y < image.height()/m_height; y++) {
         for (uint8_t x = 0; x < image.width()/m_width; x++) {
-            byteWriter.beginArrayRow();
+            m_generator->beginArrayRow();
             for (uint8_t row = 0; row < m_height; row++) {
                 uint8_t remainingBits = m_width;
 
@@ -73,7 +69,7 @@ ConverterError FixedConverter::convert(const InputImage &image, ByteWriter &byte
                         mask >>= 1;
                         remainingBits -= 1;
                     }
-                    byteWriter.writeByte(byte);
+                    m_generator->writeByte(byte);
                     byteIndex += 1;
                 }
             }
@@ -81,14 +77,17 @@ ConverterError FixedConverter::convert(const InputImage &image, ByteWriter &byte
             auto size = std::snprintf(nullptr, 0, format, characterCount, characterCount);
             std::string byteString(size, '\0');
             std::sprintf(&byteString[0], format, characterCount, characterCount);
-            byteWriter.addComment(byteString);
-            byteWriter.addLineBreak();
+            m_generator->addComment(byteString);
+            m_generator->addLineBreak();
             characterCount += 1;
         }
     }
-    byteWriter.endArray();
-    byteWriter.end();
+    m_generator->endArray();
+    m_generator->end();
 
+    if (error) {
+        *error = ConverterError::NoError;
+    }
 
-    return ConverterError::NoError;
+    return m_generator->sourceCode();
 }

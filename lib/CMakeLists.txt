@@ -10,7 +10,8 @@ FILE(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 
 add_library(${PROJECT_NAME} SHARED
         ${headers}
-        convertererror.cpp
+		bytewriter.cpp
+		convertererror.cpp
         fixedconverter.cpp
         sourcecodegenerator.cpp)
 
