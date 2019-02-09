@@ -26,7 +26,7 @@ void DroppableStackedWidget::dropEvent(QDropEvent *event)
 {
     if (event->mimeData()->hasUrls()) {
         QUrl url = event->mimeData()->urls().last();
-        qDebug() << __PRETTY_FUNCTION__ << url;
+        qDebug() << "Dropped file with url:" << url.path();
         emit imageFileDropped(url);
         setDropActionAvailable(false);
     }

@@ -59,33 +59,29 @@ void MainWindow::setupSourceCodeGenerators()
     generators.clear();
     SourceCodeGeneratorItem cGenerator;
     cGenerator.title = tr("C/C++");
-    cGenerator.createGenerator = [this]() {
-        SourceCodeOptions options(this->config.bitNumbering, this->config.shouldInvertBits);
-        return new CCodeGenerator(options);
+    cGenerator.createGenerator = [](const SourceCodeOptions &options) {
+        return new SourceCodeGenerator<CCodeGenerator>(options);
     };
     generators << cGenerator;
 
     SourceCodeGeneratorItem arduinoGenerator;
     arduinoGenerator.title = tr("Arduino");
-    arduinoGenerator.createGenerator = [this]() {
-        SourceCodeOptions options = { this->config.bitNumbering, this->config.shouldInvertBits };
-        return new ArduinoCodeGenerator(options);
+    arduinoGenerator.createGenerator = [](const SourceCodeOptions &options) {
+        return new SourceCodeGenerator<ArduinoCodeGenerator>(options);
     };
     generators << arduinoGenerator;
 
     SourceCodeGeneratorItem pythonListGenerator;
     pythonListGenerator.title = tr("Python List");
-    pythonListGenerator.createGenerator = [this]() {
-        SourceCodeOptions options = { this->config.bitNumbering, this->config.shouldInvertBits };
-        return new PythonListCodeGenerator(options);
+    pythonListGenerator.createGenerator = [](const SourceCodeOptions &options) {
+        return new SourceCodeGenerator<PythonListCodeGenerator>(options);
     };
     generators << pythonListGenerator;
 
     SourceCodeGeneratorItem pythonBytesGenerator;
     pythonBytesGenerator.title = tr("Python Bytes");
-    pythonBytesGenerator.createGenerator = [this]() {
-        SourceCodeOptions options = { this->config.bitNumbering, this->config.shouldInvertBits };
-        return new PythonBytesCodeGenerator(options);
+    pythonBytesGenerator.createGenerator = [](const SourceCodeOptions &options) {
+        return new SourceCodeGenerator<PythonBytesCodeGenerator>(options);
     };
     generators << pythonBytesGenerator;
 
@@ -111,8 +107,8 @@ void MainWindow::updateConfig()
     config.fontHeight = converted ? (uint8_t)intValue : 0;
 
     config.readingMode = ui->topBottomRadioButton->isChecked() ?
-                FontConverter::TopToBottom :
-                FontConverter::LeftToRight;
+                FixedConverter::TopToBottom :
+                FixedConverter::LeftToRight;
 
     config.shouldInvertBits = ui->invertBitsCheckBox->isChecked();
 
@@ -161,10 +157,10 @@ void MainWindow::applyCurrentConfig()
     ui->heightLineEdit->setText(fontString);
 
     switch (config.readingMode) {
-    case FontConverter::TopToBottom:
+    case FixedConverter::TopToBottom:
         ui->topBottomRadioButton->setChecked(true);
         break;
-    case FontConverter::LeftToRight:
+    case FixedConverter::LeftToRight:
         ui->leftRightRadioButton->setChecked(true);
         break;
     }
@@ -199,12 +195,12 @@ void MainWindow::loadImageFile(const QUrl &url)
         shakeAnimation->start(ShakeAnimation::DeleteWhenStopped);
         ui->statusBar->showMessage(tr("Couldn't read image from provided file"), Qt::darkRed, 5000);
     } else {
-        qDebug() << image.size();
         if (conversion and !conversion->isFinished()) {
             conversion->setCanceled(true);
         }
 
-        auto generator = generators.at(ui->formatComboBox->currentIndex()).createGenerator();
+        SourceCodeOptions options(config.bitNumbering, config.shouldInvertBits);
+        auto generator = generators.at(ui->formatComboBox->currentIndex()).createGenerator(options);
 
         conversion = new ConversionRunnable();
         conversion->imageConverter()->setImage(new InputQImage(image));
@@ -225,7 +221,6 @@ void MainWindow::imageConverted(const QString &sourceCode, const ConverterError 
     qint64 conversionTime = conversionTimer.elapsed();
     conversionTimer.invalidate();
     Q_ASSERT(conversion->isFinished());
-    qDebug() << __PRETTY_FUNCTION__;
     if (error == ConverterError::NoError) {
         ui->statusBar->showMessage(tr("%1x%2 font generated in %3ms")
                                    .arg(QString::number(config.fontHeight),

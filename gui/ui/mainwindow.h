@@ -15,7 +15,7 @@ class MainWindow;
 
 struct SourceCodeGeneratorItem {
     QString title;
-    std::function<SourceCodeGenerator * ()> createGenerator;
+    std::function<SourceCodeGeneratorInterface * (const SourceCodeOptions &options)> createGenerator;
 };
 
 class MainWindow : public QMainWindow

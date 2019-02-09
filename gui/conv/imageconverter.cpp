@@ -11,10 +11,6 @@ ImageConverter::~ImageConverter()
         delete m_image;
         m_image = nullptr;
     }
-    if (m_sourceCodeGenerator) {
-        delete m_sourceCodeGenerator;
-        m_sourceCodeGenerator = nullptr;
-    }
 }
 
 QString ImageConverter::convert(bool *ok)
@@ -28,19 +24,22 @@ QString ImageConverter::convert(bool *ok)
     };
 
 
-    if (!m_image) {
+    if (m_image == nullptr) {
         m_error = "Input image not provided";
         return tearDown(QString());
     }
-    if (!m_sourceCodeGenerator) {
+    if (m_sourceCodeGenerator == nullptr) {
         m_error = "Source code generator not provided";
         return tearDown(QString());
     }
 
-    FixedConverter converter(m_config.fontWidth, m_config.fontHeight, m_config.readingMode);
-    m_error = converter.convert(*m_image, m_sourceCodeGenerator);
+    FixedWidthFontConverter converter(m_config.fontWidth,
+                                      m_config.fontHeight,
+                                      m_config.readingMode,
+                                      std::move(m_sourceCodeGenerator));
+    auto sourceCode = converter.convert(*m_image, &m_error);
 
-    QString result = QString::fromStdString(m_sourceCodeGenerator->sourceCode());
+    QString result = QString::fromStdString(sourceCode);
 
     return tearDown(result);
 }

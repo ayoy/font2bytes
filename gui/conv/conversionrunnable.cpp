@@ -40,7 +40,6 @@ void ConversionRunnable::setCanceled(bool canceled)
 
 void ConversionRunnable::run()
 {
-    qDebug() << __PRETTY_FUNCTION__ << QThread::currentThread();
     QString sourceCode = m_imageConverter->convert();
     setFinished(true);
 

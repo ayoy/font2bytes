@@ -266,7 +266,7 @@
           </palette>
          </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Font to Bytes, Qt port.&lt;br/&gt;© 2018 Dominik Kapusta&lt;br/&gt;&lt;a href=&quot;http://kapusta.cc&quot; style=&quot;color: #7F7F7F;&quot;&gt;http://kapusta.cc&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Font to Bytes, Qt port.&lt;br/&gt;© 2019 Dominik Kapusta&lt;br/&gt;&lt;a href=&quot;http://kapusta.cc&quot; style=&quot;color: #7F7F7F;&quot;&gt;http://kapusta.cc&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -392,7 +392,7 @@ PNG file here!</string>
      <x>0</x>
      <y>0</y>
      <width>865</width>
-     <height>30</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

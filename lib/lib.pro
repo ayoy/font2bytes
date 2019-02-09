@@ -29,6 +29,7 @@ macx: equals(GUI, "1"): {
 }
 
 SOURCES += \
+    bytewriter.cpp \
     convertererror.cpp \
     fixedconverter.cpp \
     sourcecodegenerator.cpp
