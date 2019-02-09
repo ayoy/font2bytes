@@ -6,17 +6,11 @@
 #include <functional>
 #include <QElapsedTimer>
 
-class QThreadPool;
-class ConversionRunnable;
+class ConversionService;
 
 namespace Ui {
 class MainWindow;
 }
-
-struct SourceCodeGeneratorItem {
-    QString title;
-    std::function<SourceCodeGeneratorInterface * (const SourceCodeOptions &options)> createGenerator;
-};
 
 class MainWindow : public QMainWindow
 {
@@ -24,33 +18,30 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    virtual ~MainWindow();
+
 
 protected:
     void showEvent(QShowEvent *event) override;
 
 private slots:
+    void imageConverted(const QString &sourceCode, const ConverterError &error, qint64 elapsedTime);
     void updateConfig();
     void validateTextFieldInput();
     void loadImageFile(const QUrl &url);
-    void imageConverted(const QString &sourceCode, const ConverterError &error);
     void setDropActionAvailable(bool available);
     void copyToClipboard();
     void openSaveDialog();
 
 private:
     enum StackedWidgetPage { InfoLabel = 0, PromptLabel = 1, TextBrowser = 2 };
-    void applyCurrentConfig();
+    void applyConfig(ConversionConfig config);
     void setupSourceCodeGenerators();
     void shake(QWidget *widget);
 
     Ui::MainWindow *ui;
-    ConversionConfig config;
+    ConversionService *conversionService { nullptr };
     bool dropActionHidesTextBrowser { false };
-    ConversionRunnable *conversion { nullptr };
-    QList<SourceCodeGeneratorItem> generators;
-    QElapsedTimer conversionTimer;
-    QTimer *statusBarTimer { nullptr };
 };
 
 #endif // MAINWINDOW_H

@@ -36,7 +36,8 @@ SOURCES += \
     conv/conversionconfig.cpp \
     conv/conversionrunnable.cpp \
     conv/imageconverter.cpp \
-    conv/inputqimage.cpp
+    conv/inputqimage.cpp \
+    conv/conversionservice.cpp
 
 HEADERS += \
     ui/coloredstatusbar.h \
@@ -48,7 +49,8 @@ HEADERS += \
     conv/conversionconfig.h \
     conv/conversionrunnable.h \
     conv/imageconverter.h \
-    conv/inputqimage.h
+    conv/inputqimage.h \
+    conv/conversionservice.h
 
 FORMS += \
     ui/mainwindow.ui

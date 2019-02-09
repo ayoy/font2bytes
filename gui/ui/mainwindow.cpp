@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "conversionservice.h"
 #include "conversionrunnable.h"
+#include "shakeanimation.h"
 #include <f2b.h>
 #include <QDebug>
 #include <QThreadPool>
@@ -10,14 +12,17 @@
 #include <QFileDialog>
 #include <QSaveFile>
 #include <QMessageBox>
-#include "shakeanimation.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    conversionService(new ConversionService(this))
 {
     ui->setupUi(this);
-    setupSourceCodeGenerators();
+
+    for (auto generatorItem : conversionService->generators()) {
+        ui->formatComboBox->addItem(generatorItem.title);
+    }
 
     QFont fixedFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     fixedFont.setPointSize(13);
@@ -40,64 +45,29 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->copyButton, SIGNAL(clicked(bool)), this, SLOT(copyToClipboard()));
     connect(ui->saveAsButton, SIGNAL(clicked(bool)), this, SLOT(openSaveDialog()));
 
-    config.loadFromSettings();
+    connect(conversionService, SIGNAL(conversionComplete(QString,ConverterError,qint64)),
+            this, SLOT(imageConverted(QString,ConverterError,qint64)));
 }
 
 MainWindow::~MainWindow()
 {
-    generators.clear();
-
-    if (conversion && !conversion->isFinished()) {
-        conversion->setCanceled(true);
-        conversion = nullptr;
-    }
-    delete ui;
-}
-
-void MainWindow::setupSourceCodeGenerators()
-{
-    generators.clear();
-    SourceCodeGeneratorItem cGenerator;
-    cGenerator.title = tr("C/C++");
-    cGenerator.createGenerator = [](const SourceCodeOptions &options) {
-        return new SourceCodeGenerator<CCodeGenerator>(options);
-    };
-    generators << cGenerator;
-
-    SourceCodeGeneratorItem arduinoGenerator;
-    arduinoGenerator.title = tr("Arduino");
-    arduinoGenerator.createGenerator = [](const SourceCodeOptions &options) {
-        return new SourceCodeGenerator<ArduinoCodeGenerator>(options);
-    };
-    generators << arduinoGenerator;
-
-    SourceCodeGeneratorItem pythonListGenerator;
-    pythonListGenerator.title = tr("Python List");
-    pythonListGenerator.createGenerator = [](const SourceCodeOptions &options) {
-        return new SourceCodeGenerator<PythonListCodeGenerator>(options);
-    };
-    generators << pythonListGenerator;
-
-    SourceCodeGeneratorItem pythonBytesGenerator;
-    pythonBytesGenerator.title = tr("Python Bytes");
-    pythonBytesGenerator.createGenerator = [](const SourceCodeOptions &options) {
-        return new SourceCodeGenerator<PythonBytesCodeGenerator>(options);
-    };
-    generators << pythonBytesGenerator;
-
-    for (auto generatorItem : generators) {
-        ui->formatComboBox->addItem(generatorItem.title);
+    if (ui != nullptr) {
+        delete ui;
+        ui = nullptr;
     }
 }
+
 
 void MainWindow::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event);
-    applyCurrentConfig();
+    applyConfig(conversionService->config());
 }
 
 void MainWindow::updateConfig()
 {
+    ConversionConfig config;
+
     bool converted = false;
     int intValue = ui->widthLineEdit->text().toInt(&converted);
     config.fontWidth = converted ? (uint8_t)intValue : 0;
@@ -118,7 +88,7 @@ void MainWindow::updateConfig()
 
     config.sourceCodeGeneratorIndex = ui->formatComboBox->currentIndex();
 
-    config.saveToSettings();
+    conversionService->setConfig(config);
 }
 
 void MainWindow::validateTextFieldInput()
@@ -137,10 +107,10 @@ void MainWindow::validateTextFieldInput()
     }
 
     updateConfig();
-    applyCurrentConfig();
+    applyConfig(conversionService->config());
 }
 
-void MainWindow::applyCurrentConfig()
+void MainWindow::applyConfig(ConversionConfig config)
 {
     if (ui->stackedWidget->currentIndex() != TextBrowser) {
         if (config.isValid()) {
@@ -195,37 +165,18 @@ void MainWindow::loadImageFile(const QUrl &url)
         shakeAnimation->start(ShakeAnimation::DeleteWhenStopped);
         ui->statusBar->showMessage(tr("Couldn't read image from provided file"), Qt::darkRed, 5000);
     } else {
-        if (conversion and !conversion->isFinished()) {
-            conversion->setCanceled(true);
-        }
-
-        SourceCodeOptions options(config.bitNumbering, config.shouldInvertBits);
-        auto generator = generators.at(ui->formatComboBox->currentIndex()).createGenerator(options);
-
-        conversion = new ConversionRunnable();
-        conversion->imageConverter()->setImage(new InputQImage(image));
-        conversion->imageConverter()->setSourceCodeGenerator(generator);
-        conversion->imageConverter()->setConfig(config);
-
-        connect(conversion->imageConverter(), SIGNAL(conversionFinished(QString,ConverterError)),
-                this, SLOT(imageConverted(QString,ConverterError)),
-                Qt::BlockingQueuedConnection);
-
-        conversionTimer.start();
-        QThreadPool::globalInstance()->start(conversion);
+        auto generator = conversionService->generators().at(ui->formatComboBox->currentIndex());
+        conversionService->convert(image, generator);
     }
 }
 
-void MainWindow::imageConverted(const QString &sourceCode, const ConverterError &error)
+void MainWindow::imageConverted(const QString &sourceCode, const ConverterError &error, qint64 elapsedTime)
 {
-    qint64 conversionTime = conversionTimer.elapsed();
-    conversionTimer.invalidate();
-    Q_ASSERT(conversion->isFinished());
     if (error == ConverterError::NoError) {
         ui->statusBar->showMessage(tr("%1x%2 font generated in %3ms")
-                                   .arg(QString::number(config.fontHeight),
-                                        QString::number(config.fontWidth),
-                                        QString::number(conversionTime)));
+                                   .arg(QString::number(conversionService->config().fontHeight),
+                                        QString::number(conversionService->config().fontWidth),
+                                        QString::number(elapsedTime)));
 
         ui->stackedWidget->setCurrentIndex(TextBrowser);
         ui->textBrowser->setText(sourceCode);
@@ -234,8 +185,6 @@ void MainWindow::imageConverted(const QString &sourceCode, const ConverterError 
         shakeAnimation->start(ShakeAnimation::DeleteWhenStopped);
         ui->statusBar->showMessage(QString::fromStdString(error.description), Qt::darkRed, 5000);
     }
-
-    conversion = nullptr;
 }
 
 void MainWindow::copyToClipboard()
