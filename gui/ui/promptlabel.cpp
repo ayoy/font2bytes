@@ -2,7 +2,7 @@
 
 PromptLabel::PromptLabel(QWidget *parent):
     QLabel(parent),
-    defaultPalette(palette())
+    defaultPalette { palette() }
 {
     defaultPalette.setColor(foregroundRole(), Qt::gray);
     setPalette(defaultPalette);

@@ -4,7 +4,8 @@
 #include <QMutexLocker>
 
 ConversionRunnable::ConversionRunnable() :
-    m_imageConverter(new ImageConverter())
+    QRunnable(),
+    m_imageConverter { new ImageConverter() }
 {
 }
 

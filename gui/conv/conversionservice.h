@@ -11,7 +11,11 @@
 class ConversionRunnable;
 
 struct SourceCodeGeneratorItem {
+    friend class ConversionService;
+
     QString title;
+
+private:
     std::function<SourceCodeGeneratorInterface * (const SourceCodeOptions &options)> createGenerator;
 };
 

@@ -11,7 +11,6 @@ ConversionService::ConversionService(QObject * parent) :
 
 ConversionService::~ConversionService()
 {
-    m_generators.clear();
     if (m_conversion && !m_conversion->isFinished()) {
         m_conversion->setCanceled(true);
         m_conversion = nullptr;

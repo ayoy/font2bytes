@@ -1,7 +1,8 @@
 #include "inputqimage.h"
 
 InputQImage::InputQImage(const QImage &image):
-    image(image)
+    InputImage(),
+    image { image }
 {
 }
 

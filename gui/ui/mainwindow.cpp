@@ -15,8 +15,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    conversionService(new ConversionService(this))
+    ui { new Ui::MainWindow },
+    conversionService { new ConversionService(this) }
 {
     ui->setupUi(this);
 

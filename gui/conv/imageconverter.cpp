@@ -1,7 +1,8 @@
 #include "imageconverter.h"
 #include <functional>
 
-ImageConverter::ImageConverter(QObject *parent) : QObject(parent)
+ImageConverter::ImageConverter(QObject *parent) :
+    QObject(parent)
 {
 }
 

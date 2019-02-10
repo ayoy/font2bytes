@@ -4,7 +4,7 @@
 
 ShakeAnimation::ShakeAnimation(QWidget *target, QObject *parent) :
     QSequentialAnimationGroup(parent),
-    m_targetObject(target)
+    m_targetObject { target }
 {
     setupAnimations();
 }
