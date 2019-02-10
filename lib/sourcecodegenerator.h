@@ -4,6 +4,7 @@
 #include "bytewriter.h"
 #include <sstream>
 #include <ctime>
+#include <memory>
 
 struct SourceCodeOptions
 {

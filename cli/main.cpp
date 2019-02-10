@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
+#include <cstring>
 #include "png_read.h"
 #include "inputpngimage.h"
 #include <f2b.h>
@@ -139,7 +140,8 @@ int main(int argc, char *argv[]) {
 
     auto inputImage = InputPNGImage::construct(std::string(config.inputFilePath));
     if (!inputImage.has_value()) {
-        std::cerr << "Error while converting image: " << strerror(errno) << std::endl;
+        std::cerr << "Error while converting image: " 
+	    << std::strerror(errno) << std::endl;
         exit(EXIT_FAILURE);
     }
 

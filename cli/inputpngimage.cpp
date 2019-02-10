@@ -1,12 +1,14 @@
 #include "inputpngimage.h"
 #include <iostream>
 #include <cerrno>
+#include <cstring>
 
 std::optional<InputPNGImage> InputPNGImage::construct(const std::string &filePath)
 {
     png_data *data = png_data_create(filePath.c_str());
     if (data == nullptr) {
-        std::cerr << "Failed to read PNG file at " << filePath << ": " << strerror(errno) << std::endl;
+        std::cerr << "Failed to read PNG file at " << filePath
+	    << ": " << std::strerror(errno) << std::endl;
         return std::nullopt;
     }
     return InputPNGImage(data);
