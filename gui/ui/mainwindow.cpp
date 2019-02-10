@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     QFont fixedFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-    fixedFont.setPointSize(13);
+    fixedFont.setPixelSize(13);
     ui->textBrowser->setFont(fixedFont);
     QFont infoFont = ui->infoLabel->font();
     infoFont.setPixelSize(32);
