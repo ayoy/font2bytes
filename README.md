@@ -10,8 +10,13 @@ Components
 * **f2b** - a command-line tool in C/C++
 * **font2bytes** - an GUI application written in Qt
 
+Requirements
+-------------------
+* C++17
+* CMake (for command-line tool bulding)
+* Qt (for the GUI app)
 
-Installation
+Building
 -------------------
 For the GUI app, use FontToBytes-gui.pro:
 
@@ -31,6 +36,8 @@ or if you don't have Qt (or don't want to use `qmake`):
     $ cmake ..
     $ make
     $ ./f2b
+
+There's a `make install` target provided, if you feel like integrating the app within your operating system (`make uninstall` is present too, also for the CMake build).
 
 Author
 -------------------
