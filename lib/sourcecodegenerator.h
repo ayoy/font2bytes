@@ -81,7 +81,7 @@ std::string SourceCodeGenerator<T>::getCurrentTimestamp() const
 {
     time_t     now = time(0);
     struct tm  tstruct;
-    char       buf[22];
+    char       buf[23];
     tstruct = *localtime(&now);
     strftime(buf, sizeof(buf), "%d/%m/%Y at %H:%M:%S", &tstruct);
 
