@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include <png.h>
+#include <stdint.h>
 
 typedef struct png_data {
     u_int32_t width;
