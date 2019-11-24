@@ -79,7 +79,7 @@ private:
 template <class T>
 std::string SourceCodeGenerator<T>::getCurrentTimestamp() const
 {
-    time_t     now = time(0);
+    time_t     now = time(nullptr);
     struct tm  tstruct;
     char       buf[23];
     tstruct = *localtime(&now);
@@ -95,7 +95,7 @@ uint8_t SourceCodeGenerator<T>::formatByte(uint8_t byte) const
         uint8_t reversedByte = 0;
         for (uint8_t i = 0; i < 8; i++) {
             if ((byte & (1<<i)) != 0) {
-                uint8_t setBit = 1<<(7-i);
+                uint8_t setBit = static_cast<uint8_t>(1<<(7-i));
                 reversedByte |= setBit;
             }
         }

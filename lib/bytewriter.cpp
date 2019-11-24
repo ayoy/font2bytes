@@ -39,7 +39,7 @@ std::string CCodeGenerator::beginArray(const std::string &name) const
 
 std::string CCodeGenerator::byte(uint8_t byte) const
 {
-    auto format = "0x%02X,";
+    const auto format = "0x%02X,";
     std::string byteString(5, '\0');
     std::sprintf(&byteString[0], format, byte);
 
@@ -95,7 +95,7 @@ std::string PythonListCodeGenerator::beginArray(const std::string &name) const
 
 std::string PythonListCodeGenerator::byte(uint8_t byte) const
 {
-    auto format = "0x%02X,";
+    const auto format = "0x%02X,";
     std::string byteString(5, '\0');
     std::sprintf(&byteString[0], format, byte);
 
@@ -137,7 +137,7 @@ std::string PythonBytesCodeGenerator::beginArrayRow() const
 
 std::string PythonBytesCodeGenerator::byte(uint8_t byte) const
 {
-    auto format = "\\x%02X";
+    const auto format = "\\x%02X";
     std::string byteString(4, '\0');
     std::sprintf(&byteString[0], format, byte);
 

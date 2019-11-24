@@ -26,6 +26,8 @@ public:
      * @return true if a given pixel is set in the image, false otherwise
      */
     virtual bool isPixelSet(uint32_t x, uint32_t y) const = 0;
+
+    virtual ~InputImage() = default;
 };
 
 #endif // INPUTIMAGE_H

@@ -8,8 +8,8 @@ extern "C" {
 #include <png.h>
 
 typedef struct png_data {
-    int width;
-    int height;
+    u_int32_t width;
+    u_int32_t height;
     png_byte color_type;
     png_byte bit_depth;
     png_bytep *row_pointers;

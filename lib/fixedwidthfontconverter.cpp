@@ -51,7 +51,7 @@ std::string FixedWidthFontConverter::convert(const InputImage &image, ConverterE
 
                 while (remainingBits > 0) {
                     uint8_t byte = 0;
-                    uint8_t bitCount = std::min(remainingBits, (uint8_t)8);
+                    uint8_t bitCount = std::min(remainingBits, static_cast<uint8_t>(8));
                     uint8_t mask = 1<<7;
                     for (uint8_t bit = 0; bit < bitCount; bit++) {
                         switch (m_readingMode) {
@@ -73,9 +73,9 @@ std::string FixedWidthFontConverter::convert(const InputImage &image, ConverterE
                     byteIndex += 1;
                 }
             }
-            auto format = "Character 0x%02X (%d)";
+            const auto format = "Character 0x%02X (%d)";
             auto size = std::snprintf(nullptr, 0, format, characterCount, characterCount);
-            std::string byteString(size, '\0');
+            std::string byteString(static_cast<unsigned long>(size), '\0');
             std::sprintf(&byteString[0], format, characterCount, characterCount);
             m_generator->addComment(byteString);
             m_generator->addLineBreak();

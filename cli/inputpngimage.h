@@ -12,7 +12,7 @@ class InputPNGImage : public InputImage
 public:
     static std::optional<InputPNGImage> construct(const std::string &filePath);
 
-    virtual ~InputPNGImage() = default;
+    virtual ~InputPNGImage() override = default;
     InputPNGImage(InputPNGImage &&other) = default;
     InputPNGImage& operator=(InputPNGImage &&other) = default;
 

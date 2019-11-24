@@ -52,11 +52,11 @@ static void parseOpts(int argc, char *argv[], Config &config)
         switch (opt) {
         case 'w':
             config.fontWidthProvided = true;
-            config.fontWidth = (uint8_t)strtol(optarg, NULL, 10);
+            config.fontWidth = static_cast<uint8_t>(strtol(optarg, nullptr, 10));
             break;
         case 'h':
             config.fontHeightProvided = true;
-            config.fontHeight = (uint8_t)strtol(optarg, NULL, 10);
+            config.fontHeight = static_cast<uint8_t>(strtol(optarg, nullptr, 10));
             break;
         case 'i':
             config.options.shouldInvertBits = true;
