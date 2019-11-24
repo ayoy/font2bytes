@@ -1,5 +1,6 @@
 font2bytes
 ========================
+![](https://github.com/ayoy/font2bytes/workflows/cmake/badge.svg)
 
 A tribute to [Lucky Resistor](http://luckyresistor.me) and his [FontToBytes](https://github.com/LuckyResistor/FontToBytes) MacOS app. This is a multi-platform port of the app that converts font bitmap to array of bytes for use in embedded systems.
 Read the whole story [in my blog post](https://kapusta.cc/2019/02/10/font2bytes/).
