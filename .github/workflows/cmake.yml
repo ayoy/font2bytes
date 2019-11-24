@@ -15,5 +15,5 @@ jobs:
     - name: ghaction-cmake
       uses: lpenz/ghaction-cmake@v0.1
       with:
-          dependencies: 'libz libpng'
+          dependencies: 'zlib1g-dev libpng-dev'
           cc: ${{ matrix.cc }}
