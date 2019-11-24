@@ -66,7 +66,7 @@ png_data * png_data_create(const char *filename) {
     png_read_update_info(png, info);
 
     data->row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * data->height);
-    for (u_int32_t y = 0; y < data->height; y++) {
+    for (uint32_t y = 0; y < data->height; y++) {
         data->row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png,info));
     }
 
