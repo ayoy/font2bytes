@@ -39,17 +39,9 @@ template <class T>
 class SourceCodeGenerator: public SourceCodeGeneratorInterface
 {
 public:
-    explicit SourceCodeGenerator(SourceCodeOptions options):
-            options(std::move(options)),
-            m_bytewriter(std::make_unique<T>()),
-            m_stream(std::make_unique<std::ostringstream>())
-    {}
+    explicit SourceCodeGenerator(SourceCodeOptions options);
 
-    SourceCodeGenerator(SourceCodeGenerator &&other):
-            options(std::move(other.options)),
-            m_bytewriter(std::move(other.m_bytewriter)),
-            m_stream(std::move(other.m_stream))
-    {}
+    SourceCodeGenerator(SourceCodeGenerator &&other) = default;
 
     virtual ~SourceCodeGenerator() = default;
 
@@ -75,6 +67,13 @@ private:
     std::unique_ptr<T> m_bytewriter;
     std::unique_ptr<std::ostringstream> m_stream;
 };
+
+template<class T>
+SourceCodeGenerator<T>::SourceCodeGenerator(SourceCodeOptions options):
+        options(std::move(options)),
+        m_bytewriter(std::make_unique<T>()),
+        m_stream(std::make_unique<std::ostringstream>())
+{}
 
 template <class T>
 std::string SourceCodeGenerator<T>::getCurrentTimestamp() const

@@ -1,7 +1,6 @@
 #ifndef F2B_PRIVATE_H
 #define F2B_PRIVATE_H
 
-#include "bytewriter.h"
 #include "convertererror.h"
 #include "fixedwidthfontconverter.h"
 #include "inputimage.h"
