@@ -11,8 +11,8 @@ ConverterError FixedWidthFontConverter::checkImage(const InputImage &image)
                               "The height of the image has to be minimum " + std::to_string(m_height) + " pixels.");
     }
     if (image.width() % m_width != 0) {
-        return ConverterError("Odd Image Height",
-                              "The height of the image has to be a multiple of " + std::to_string(m_height) + " pixels.");
+        return ConverterError("Odd Image Width",
+                              "The width of the image has to be a multiple of " + std::to_string(m_width) + " pixels.");
     }
     if (image.height() % m_height != 0) {
         return ConverterError("Odd Image Height",
