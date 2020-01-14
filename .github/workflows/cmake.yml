@@ -11,8 +11,11 @@ jobs:
     runs-on: ubuntu-latest
       
     steps:
-    - uses: actions/checkout@v1
-    - name: ghaction-cmake
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Fetch submodules
+      uses: textbook/git-checkout-submodule-action@master
+    - name: Build with CMake
       uses: lpenz/ghaction-cmake@v0.1
       with:
           dependencies: 'zlib1g-dev libpng-dev'
