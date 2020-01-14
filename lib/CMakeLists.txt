@@ -21,7 +21,7 @@ add_library(${PROJECT_NAME} SHARED
 
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC ${PNG_DEFINITIONS})
-target_link_libraries(${PROJECT_NAME} ${PNG_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${PNG_LIBRARIES} GSL)
 target_include_directories(${PROJECT_NAME} PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${PNG_INCLUDE_DIRS})

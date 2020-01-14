@@ -3,6 +3,7 @@ project(FontToBytes)
 
 find_package(PNG REQUIRED)
 
+add_subdirectory(gsl)
 add_subdirectory(lib)
 add_subdirectory(cli)
 

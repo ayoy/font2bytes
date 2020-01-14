@@ -12,7 +12,7 @@ add_executable(${TARGET}
         png_read.h)
 
 target_include_directories(${TARGET} PRIVATE .)
-target_link_libraries (${TARGET} LINK_PUBLIC font2bytes)
+target_link_libraries (${TARGET} LINK_PUBLIC font2bytes GSL)
 set_target_properties(${TARGET} PROPERTIES 
         INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
