@@ -3,7 +3,7 @@
 #include <cerrno>
 #include <cstring>
 
-static const int pixel_byte_size = 4;
+static constexpr int pixel_byte_size = 4;
 
 bool Pixel::is_set() const {
     return a == 0xFF &&

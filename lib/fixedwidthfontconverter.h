@@ -73,10 +73,10 @@ public:
     };
 
     FixedWidthFontConverter(uint8_t width, uint8_t height, ReadingMode readingMode, std::unique_ptr<SourceCodeGeneratorInterface> generator):
-            m_width(width),
-            m_height(height),
-            m_readingMode(readingMode),
-            m_generator(std::move(generator))
+            m_width { width },
+            m_height { height },
+            m_readingMode { readingMode },
+            m_generator { std::move(generator) }
     {}
 
     virtual ~FixedWidthFontConverter() = default;

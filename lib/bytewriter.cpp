@@ -4,17 +4,17 @@ const std::string ByteWriter::identifier = "";
 const std::string ByteWriter::description = "";
 
 
-std::string ByteWriter::beginArrayRow() const
+const std::string ByteWriter::beginArrayRow() const
 {
     return "\t";
 }
 
-std::string ByteWriter::lineBreak() const
+const std::string ByteWriter::lineBreak() const
 {
     return "\n";
 }
 
-std::string ByteWriter::end() const
+const std::string ByteWriter::end() const
 {
     return "\n\n";
 }
@@ -39,7 +39,7 @@ std::string CCodeGenerator::beginArray(const std::string &name) const
 
 std::string CCodeGenerator::byte(uint8_t byte) const
 {
-    const auto format = "0x%02X,";
+    constexpr char format[] { "0x%02X," };
     std::string byteString(5, '\0');
     std::sprintf(&byteString[0], format, byte);
 
@@ -51,7 +51,7 @@ std::string CCodeGenerator::comment(const std::string &comment) const
     return " // " + comment;
 }
 
-std::string CCodeGenerator::endArray() const
+const std::string CCodeGenerator::endArray() const
 {
     return "};\n";
 }
@@ -95,7 +95,7 @@ std::string PythonListCodeGenerator::beginArray(const std::string &name) const
 
 std::string PythonListCodeGenerator::byte(uint8_t byte) const
 {
-    const auto format = "0x%02X,";
+    constexpr char format[] { "0x%02X," };
     std::string byteString(5, '\0');
     std::sprintf(&byteString[0], format, byte);
 
@@ -107,7 +107,7 @@ std::string PythonListCodeGenerator::comment(const std::string &comment) const
     return " # " + comment;
 }
 
-std::string PythonListCodeGenerator::endArray() const
+const std::string PythonListCodeGenerator::endArray() const
 {
     return "\n]\n";
 }
@@ -130,7 +130,7 @@ std::string PythonBytesCodeGenerator::beginArray(const std::string &name) const
     return "\n\n" + name + " = b'' \\\n";
 }
 
-std::string PythonBytesCodeGenerator::beginArrayRow() const
+const std::string PythonBytesCodeGenerator::beginArrayRow() const
 {
     return "\t'";
 }
@@ -150,7 +150,7 @@ std::string PythonBytesCodeGenerator::comment(const std::string &comment) const
     return "' \\";
 }
 
-std::string PythonBytesCodeGenerator::endArray() const
+const std::string PythonBytesCodeGenerator::endArray() const
 {
     return "";
 }

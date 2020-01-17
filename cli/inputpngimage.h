@@ -18,7 +18,7 @@ struct Pixel {
     static std::optional<Pixel> from_span(const gsl::span<png_byte> &s);
 
     bool is_set() const;
-    const uint8_t is_set_threshold = 0x32;
+    static constexpr uint8_t is_set_threshold = 0x32;
 };
 
 class InputPNGImage : public InputImage
