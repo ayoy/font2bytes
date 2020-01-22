@@ -58,9 +58,9 @@ std::optional<InputPNGImage> InputPNGImage::construct(const std::string &filePat
 
 InputPNGImage::InputPNGImage(std::vector<Pixel> pixels, uint32_t width, uint32_t height) :
         InputImage(),
-        _data { pixels },
         _width { width },
-        _height { height }
+        _height { height },
+        _data { pixels }
 {
 }
 

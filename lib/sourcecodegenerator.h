@@ -35,7 +35,7 @@ public:
     virtual ~SourceCodeGeneratorInterface() = default;
 };
 
-template <class T>
+template<typename T>
 class SourceCodeGenerator: public SourceCodeGeneratorInterface
 {
 public:
@@ -68,14 +68,14 @@ private:
     std::unique_ptr<std::ostringstream> m_stream;
 };
 
-template<class T>
+template<typename T>
 SourceCodeGenerator<T>::SourceCodeGenerator(SourceCodeOptions options):
         options(std::move(options)),
         m_bytewriter(std::make_unique<T>()),
         m_stream(std::make_unique<std::ostringstream>())
 {}
 
-template <class T>
+template<typename T>
 std::string SourceCodeGenerator<T>::getCurrentTimestamp() const
 {
     time_t     now = time(nullptr);
@@ -87,7 +87,7 @@ std::string SourceCodeGenerator<T>::getCurrentTimestamp() const
     return buf;
 }
 
-template <class T>
+template<typename T>
 uint8_t SourceCodeGenerator<T>::formatByte(uint8_t byte) const
 {
     if (options.bitNumbering == SourceCodeOptions::MSB) {
@@ -106,50 +106,50 @@ uint8_t SourceCodeGenerator<T>::formatByte(uint8_t byte) const
     return byte;
 }
 
-template <class T>
+template<typename T>
 void SourceCodeGenerator<T>::begin()
 {
     m_stream->flush();
     *m_stream << m_bytewriter->begin(std::move(getCurrentTimestamp()));
 }
 
-template <class T>
+template<typename T>
 void SourceCodeGenerator<T>::beginArray(const std::string &name)
 {
     *m_stream << m_bytewriter->beginArray(name);
 }
 
-template <class T>
+template<typename T>
 void SourceCodeGenerator<T>::beginArrayRow()
 {
     *m_stream << m_bytewriter->beginArrayRow();
 }
 
-template <class T>
+template<typename T>
 void SourceCodeGenerator<T>::writeByte(uint8_t byte)
 {
     *m_stream << m_bytewriter->byte(formatByte(byte));
 }
 
-template <class T>
+template<typename T>
 void SourceCodeGenerator<T>::addComment(const std::string &comment)
 {
     *m_stream << m_bytewriter->comment(comment);
 }
 
-template <class T>
+template<typename T>
 void SourceCodeGenerator<T>::addLineBreak()
 {
     *m_stream << m_bytewriter->lineBreak();
 }
 
-template <class T>
+template<typename T>
 void SourceCodeGenerator<T>::endArray()
 {
     *m_stream << m_bytewriter->endArray();
 }
 
-template <class T>
+template<typename T>
 void SourceCodeGenerator<T>::end()
 {
     *m_stream << m_bytewriter->end();
