@@ -12,7 +12,7 @@ bool Pixel::is_set() const {
             b < is_set_threshold);
 }
 
-std::optional<Pixel> Pixel::from_span(const gsl::span<png_byte> &s)
+std::optional<Pixel> Pixel::from_span(const gsl::span<png_byte>& s)
 {
     if (s.size() < pixel_byte_size) {
         std::cerr << "Invalid span size for Pixel: " << s.size() << std::endl;
@@ -22,7 +22,7 @@ std::optional<Pixel> Pixel::from_span(const gsl::span<png_byte> &s)
 }
 
 
-std::optional<InputPNGImage> InputPNGImage::construct(const std::string &filePath)
+std::optional<InputPNGImage> InputPNGImage::construct(const std::string& filePath)
 {
     png_data *data = png_data_create(filePath.c_str());
     if (data == nullptr) {
@@ -31,7 +31,7 @@ std::optional<InputPNGImage> InputPNGImage::construct(const std::string &filePat
         return std::nullopt;
     }
 
-    std::vector<Pixel> pixels;
+    std::vector<bool> pixels;
 
     for (uint32_t row = 0; row < data->height; row++) {
 
@@ -47,16 +47,18 @@ std::optional<InputPNGImage> InputPNGImage::construct(const std::string &filePat
                 png_data_destroy(data);
                 return std::nullopt;
             }
-            pixels.push_back(*pixel);
+            pixels.push_back(pixel->is_set());
             i += pixel_byte_size;
 
         }
     }
+    auto width = data->width;
+    auto height = data->height;
     png_data_destroy(data);
-    return InputPNGImage(std::move(pixels), data->width, data->height);
+    return InputPNGImage(std::move(pixels), width, height);
 }
 
-InputPNGImage::InputPNGImage(std::vector<Pixel> pixels, uint32_t width, uint32_t height) :
+InputPNGImage::InputPNGImage(std::vector<bool>&& pixels, uint32_t width, uint32_t height) :
         InputImage(),
         _width { width },
         _height { height },
@@ -69,5 +71,5 @@ bool InputPNGImage::isPixelSet(uint32_t x, uint32_t y) const
     if (x > width() || y > height()) {
         return false;
     }
-    return _data[y * _width + x].is_set();
+    return bool(_data[y * _width + x]);
 }

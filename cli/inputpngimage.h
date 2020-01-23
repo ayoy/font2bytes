@@ -27,22 +27,22 @@ public:
     static std::optional<InputPNGImage> construct(const std::string &filePath);
 
     virtual ~InputPNGImage() = default;
-    InputPNGImage(InputPNGImage &&other) = default;
-    InputPNGImage& operator=(InputPNGImage &&other) = default;
+    InputPNGImage(InputPNGImage&& other) = default;
+    InputPNGImage& operator=(InputPNGImage&& other) = default;
 
-    InputPNGImage(const InputPNGImage &other) = delete;
-    InputPNGImage& operator=(const InputPNGImage &other) = delete;
+    InputPNGImage(const InputPNGImage& other) = delete;
+    InputPNGImage& operator=(const InputPNGImage& other) = delete;
 
     virtual uint32_t width() const override { return _width; }
     virtual uint32_t height() const override { return _height; }
     virtual bool isPixelSet(uint32_t x, uint32_t y) const override;
 
 private:
-    InputPNGImage(std::vector<Pixel> pixels, uint32_t width, uint32_t height);
+    InputPNGImage(std::vector<bool>&& pixels, uint32_t width, uint32_t height);
 
     uint32_t _width;
     uint32_t _height;
-    std::vector<Pixel> _data;
+    std::vector<bool> _data;
 };
 
 #endif // INPUTPNGIMAGE_H

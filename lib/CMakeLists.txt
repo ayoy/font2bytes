@@ -17,7 +17,7 @@ add_library(${PROJECT_NAME} SHARED
         ${HEADERS}
 		bytewriter.cpp
 		convertererror.cpp
-		fixedwidthfontconverter.cpp)
+        fixedwidthfontconverter.cpp)
 
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC ${PNG_DEFINITIONS})
