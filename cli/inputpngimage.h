@@ -6,7 +6,7 @@
 #include <optional>
 #include <iostream>
 #include <vector>
-#include <include/gsl/span>
+#include <gsl/span>
 #include "png_read.h"
 
 struct Pixel {

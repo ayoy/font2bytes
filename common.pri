@@ -17,6 +17,6 @@ isEmpty(COMMON_PRI) {
     MOC_DIR = $${TOP}/build/obj
     RCC_DIR = $${TOP}/build/obj
     OBJECTS_DIR = $${TOP}/build/obj
-    INCLUDEPATH += $${TOP} $${TOP}/build/obj
+    INCLUDEPATH += $${TOP} $${TOP}/gsl/include $${TOP}/build/obj
     DESTDIR = $${TOP}/build
 }
